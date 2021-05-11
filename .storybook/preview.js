@@ -1,3 +1,7 @@
+import { defaultTheme } from "../src/theme/default";
+import { ThemeProvider } from "styled-components";
+import "../src/globals.css";
+import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -6,5 +10,29 @@ export const parameters = {
       color: /(background|color)$/i,
       date: /Date$/,
     },
+    hideNoControlsWarning: true,
   },
-}
+  docs: {
+    source: {
+      type: "code",
+    },
+  },
+  viewport: {
+    viewports: INITIAL_VIEWPORTS,
+    defaultViewport: "iphone6",
+  },
+  options: {
+    storySort: {
+      method: "alphabetical",
+        order: ["Docs", "Atoms", "Molecules", "Organisms", "Templates", "Pages"]
+    },
+  },
+};
+
+export const decorators = [
+  (Story) => (
+    <ThemeProvider theme={defaultTheme}>
+      <Story />
+    </ThemeProvider>
+  ),
+];
