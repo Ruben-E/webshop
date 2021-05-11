@@ -22,7 +22,8 @@
       "@webshop/pages": ["components/pages"],
       "@webshop/models": ["models"],
       "@webshop/utils": ["utils"],
-      "@webshop/config": ["config"]
+      "@webshop/config": ["config"],
+      "@webshop/hooks": ["hooks"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
