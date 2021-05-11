@@ -1,0 +1,22 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { List } from "./list";
+
+<Meta title={"Molecules/List"} component={List} />
+
+## API
+
+<ArgsTable component={List} />
+
+## Stories
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    <List>
+      <li>1. Example</li>
+      <li>2. Example</li>
+      <li>3. Example</li>
+    </List>
+  </Story>
+</Canvas>
