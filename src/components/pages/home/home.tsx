@@ -24,8 +24,8 @@ export const Home: React.FunctionComponent<HomeProps> = ({
     <p style={{ alignSelf: "center" }}>Error</p>
   ) : data ? (
     <List>
-      {data.map((item, index) => (
-        <li key={`item--${item.id}`}>
+      {data.map((item) => (
+        <li key={`item--${item.id}`} style={{ padding: "8px" }}>
           <ItemResult
             item={item}
             inCart={isInCart(item)}

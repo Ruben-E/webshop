@@ -59,7 +59,6 @@ export const ItemResult: React.FunctionComponent<ItemProps> = ({
 const ItemContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 8px;
 `;
 
 const ItemActions = styled.div`

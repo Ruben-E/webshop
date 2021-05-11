@@ -7,7 +7,3 @@ export const Link = styled.a`
     text-decoration: underline;
   }
 `;
-
-interface LinkProps {
-  href: string;
-}

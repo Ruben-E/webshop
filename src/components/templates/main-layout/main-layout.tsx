@@ -15,7 +15,7 @@ const StyledMainLayout = styled.section`
 
 const MainContent = styled.main`
   margin-top: ${HEIGHT}px;
-  padding: 8px 0 0 0;
+  padding: 8px;
   overflow-y: auto;
   width: 100%;
   flex: 1;

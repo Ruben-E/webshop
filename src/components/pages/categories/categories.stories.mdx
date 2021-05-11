@@ -1,0 +1,64 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { Categories } from "./categories";
+import { AppLayout } from "../../../pages/_app";
+
+<Meta
+  title={"Pages/Categories"}
+  component={Categories}
+  parameters={{
+    layout: "fullscreen",
+    docs: {
+      inlineStories: false,
+    },
+  }}
+/>
+
+## API
+
+<ArgsTable component={Categories} />
+
+## Stories
+
+### Loaded categories
+
+<Canvas>
+  <Story name="4 categories" height={"260px"}>
+    <AppLayout currentRoute={"/categories"}>
+      <Categories
+        categoriesState={{
+          loading: false,
+          data: ["category1", "category2", "category3", "category4"],
+        }}
+      />
+    </AppLayout>
+  </Story>
+</Canvas>
+
+### Loading
+
+<Canvas>
+  <Story name="Loading" height={"260px"}>
+    <AppLayout currentRoute={"/categories"}>
+      <Categories
+        categoriesState={{
+          loading: true,
+        }}
+      />
+    </AppLayout>
+  </Story>
+</Canvas>
+
+### Errpr
+
+<Canvas>
+  <Story name="Error" height={"260px"}>
+    <AppLayout currentRoute={"/categories"}>
+      <Categories
+        categoriesState={{
+          loading: false,
+          error: new Error("Something went wrong"),
+        }}
+      />
+    </AppLayout>
+  </Story>
+</Canvas>
