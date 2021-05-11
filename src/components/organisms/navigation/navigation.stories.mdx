@@ -1,0 +1,23 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { Navigation } from "./navigation";
+import { NAVIGATION } from "../../../config";
+
+<Meta
+  title={"Organisms/Navigation"}
+  component={Navigation}
+  parameters={{
+    layout: "fullscreen",
+  }}
+/>
+
+## API
+
+<ArgsTable component={Navigation} />
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    <Navigation items={NAVIGATION}>Content</Navigation>
+  </Story>
+</Canvas>
