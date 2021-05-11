@@ -1,0 +1,44 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { Description } from "./description";
+
+<Meta title={"Atoms/Description"} component={Description} />
+
+## API
+
+<ArgsTable component={Description} />
+
+## Stories
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    <Description>A very short description</Description>
+  </Story>
+</Canvas>
+
+### Long description
+
+<Canvas>
+  <Story name="Long description">
+    <Description>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi convallis
+      tristique nisl luctus eleifend. Nam sagittis velit vel velit condimentum,
+      eget luctus ligula pellentesque. Vivamus at tellus eget nibh molestie
+      convallis.
+    </Description>
+  </Story>
+</Canvas>
+
+### Long description truncate (3)
+
+<Canvas>
+  <Story name="Long description truncate (3)">
+    <Description truncate={3}>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi convallis
+      tristique nisl luctus eleifend. Nam sagittis velit vel velit condimentum,
+      eget luctus ligula pellentesque. Vivamus at tellus eget nibh molestie
+      convallis.
+    </Description>
+  </Story>
+</Canvas>

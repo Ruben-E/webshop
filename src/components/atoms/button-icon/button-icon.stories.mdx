@@ -1,0 +1,147 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { ButtonIcon } from "./button-icon";
+import { FaCheck, FaShoppingCart, FaTimes } from "react-icons/fa";
+import styled from "styled-components";
+
+# IconButton
+
+<Meta title={"Atoms/ButtonIcon"} component={ButtonIcon} />
+
+## API
+
+<ArgsTable component={ButtonIcon} />
+
+## Stories
+
+export const Space = () => (
+  <div style={{ width: "16px", display: "inline-block" }} />
+);
+
+export const StyledStory = styled.section`
+  h2 {
+    margin: 8px 0;
+  }
+  button {
+    margin: 0 8px 8px 0;
+  }
+`;
+
+### No text
+
+<Canvas>
+  <Story name="No text">
+    <StyledStory>
+      <h2>Default</h2>
+      <ButtonIcon icon={<FaTimes />} />
+      <ButtonIcon icon={<FaTimes />} disabled />
+      <h2>Primary</h2>
+      <ButtonIcon category={"primary"} icon={<FaTimes />} />
+      <ButtonIcon category={"primary"} icon={<FaTimes />} disabled />
+      <h2>Secondary</h2>
+      <ButtonIcon category={"secondary"} icon={<FaTimes />} />
+      <ButtonIcon category={"secondary"} icon={<FaTimes />} disabled />
+      <h2>Tertiary</h2>
+      <ButtonIcon category={"tertiary"} icon={<FaTimes />} />
+      <ButtonIcon category={"tertiary"} icon={<FaTimes />} disabled />
+    </StyledStory>
+  </Story>
+</Canvas>
+
+### Icon left
+
+<Canvas>
+  <Story name="Icon left">
+    <StyledStory>
+      <h2>Default</h2>
+      <ButtonIcon icon={<FaCheck />}>Text</ButtonIcon>
+      <ButtonIcon icon={<FaCheck />} disabled>
+        Text
+      </ButtonIcon>
+      <h2>Primary</h2>
+      <ButtonIcon category={"primary"} icon={<FaCheck />}>
+        Text
+      </ButtonIcon>
+      <ButtonIcon category={"primary"} icon={<FaCheck />} disabled>
+        Text
+      </ButtonIcon>
+      <h2>Secondary</h2>
+      <ButtonIcon category={"secondary"} icon={<FaCheck />}>
+        Text
+      </ButtonIcon>
+      <ButtonIcon category={"secondary"} icon={<FaCheck />} disabled>
+        Text
+      </ButtonIcon>
+      <h2>Tertiary</h2>
+      <ButtonIcon category={"tertiary"} icon={<FaCheck />}>
+        Text
+      </ButtonIcon>
+      <ButtonIcon category={"tertiary"} icon={<FaCheck />} disabled>
+        Text
+      </ButtonIcon>
+    </StyledStory>
+  </Story>
+</Canvas>
+
+### Icon right
+
+<Canvas>
+  <Story name="Icon right">
+    <StyledStory>
+      <h2>Default</h2>
+      <ButtonIcon position={"right"} icon={<FaShoppingCart />}>
+        Text
+      </ButtonIcon>
+      <ButtonIcon position={"right"} icon={<FaShoppingCart />} disabled>
+        Text
+      </ButtonIcon>
+      <h2>Primary</h2>
+      <ButtonIcon
+        position={"right"}
+        category={"primary"}
+        icon={<FaShoppingCart />}
+      >
+        Text
+      </ButtonIcon>
+      <ButtonIcon
+        position={"right"}
+        category={"primary"}
+        icon={<FaShoppingCart />}
+        disabled
+      >
+        Text
+      </ButtonIcon>
+      <h2>Secondary</h2>
+      <ButtonIcon
+        position={"right"}
+        category={"secondary"}
+        icon={<FaShoppingCart />}
+      >
+        Text
+      </ButtonIcon>
+      <ButtonIcon
+        position={"right"}
+        category={"secondary"}
+        icon={<FaShoppingCart />}
+        disabled
+      >
+        Text
+      </ButtonIcon>
+      <h2>Tertiary</h2>
+      <ButtonIcon
+        position={"right"}
+        category={"tertiary"}
+        icon={<FaShoppingCart />}
+      >
+        Text
+      </ButtonIcon>
+      <ButtonIcon
+        position={"right"}
+        category={"tertiary"}
+        icon={<FaShoppingCart />}
+        disabled
+      >
+        Text
+      </ButtonIcon>
+    </StyledStory>
+  </Story>
+</Canvas>

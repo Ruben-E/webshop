@@ -1,0 +1,63 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { Button } from "./button";
+import { defaultTheme } from "../../../theme/default";
+import styled from "styled-components";
+
+<Meta title={"Atoms/Button"} component={Button} />
+
+## API
+
+<ArgsTable component={Button} />
+
+## Stories
+
+export const StyledStory = styled.section`
+  h2 {
+    margin: 8px 0;
+  }
+  button {
+    margin: 0 8px 8px 0;
+  }
+`;
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    <StyledStory>
+      <h2>Default</h2>
+      <Button>Click me</Button>
+      <Button disabled>Click me</Button>
+      <h2>Primary</h2>
+      <Button category={"primary"}>Click me</Button>
+      <Button category={"primary"} disabled>
+        Click me
+      </Button>
+      <h2>Secondary</h2>
+      <Button category={"secondary"}>Click me</Button>
+      <Button category={"secondary"} disabled>
+        Click me
+      </Button>
+      <h2>Tertiary</h2>
+      <Button category={"tertiary"}>Click me</Button>
+      <Button category={"tertiary"} disabled>
+        Click me
+      </Button>
+    </StyledStory>
+  </Story>
+</Canvas>
+
+### Controlled
+
+<Canvas>
+  <Story
+    name="Controlled"
+    args={{ theme: defaultTheme, category: undefined, disabled: false }}
+  >
+    {(args) => (
+      <StyledStory>
+        <Button {...args}>Click me</Button>
+      </StyledStory>
+    )}
+  </Story>
+</Canvas>

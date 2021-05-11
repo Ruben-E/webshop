@@ -1,0 +1,21 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { Input } from "./input";
+
+<Meta title={"Atoms/Input"} component={Input} />
+
+## API
+
+<ArgsTable component={Input} />
+
+## Stories
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    <Input />
+    <br />
+    <br />
+    <Input disabled />
+  </Story>
+</Canvas>

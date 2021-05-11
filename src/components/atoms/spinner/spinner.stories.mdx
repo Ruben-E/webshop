@@ -1,0 +1,42 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { Spinner } from "./spinner";
+import styled from "styled-components";
+
+<Meta title={"Atoms/Spinner"} component={Spinner} />
+
+## API
+
+<ArgsTable component={Spinner} />
+
+## Stories
+
+export const noop = () => {};
+
+export const StyledStory = styled.section`
+  h2 {
+    margin: 8px 0;
+  }
+  input {
+    margin-bottom: 8px;
+  }
+`;
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    <StyledStory>
+      <Spinner />
+    </StyledStory>
+  </Story>
+</Canvas>
+
+### With text
+
+<Canvas>
+  <Story name="With text">
+    <StyledStory>
+      <Spinner>Loading...</Spinner>
+    </StyledStory>
+  </Story>
+</Canvas>

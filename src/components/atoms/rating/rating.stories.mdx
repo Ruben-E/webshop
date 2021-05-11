@@ -1,0 +1,27 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { Rating } from "./rating";
+
+<Meta
+  title={"Atoms/Rating"}
+  component={Rating}
+  parameters={{
+    layout: "fullscreen",
+  }}
+/>
+
+## API
+
+<ArgsTable component={Rating} />
+
+## Stories
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    <Rating value={0} />
+    <Rating value={2} />
+    <Rating value={3.5} />
+    <Rating value={5} />
+  </Story>
+</Canvas>

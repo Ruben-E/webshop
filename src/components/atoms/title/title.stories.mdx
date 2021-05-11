@@ -1,0 +1,45 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { Title } from "./title";
+
+<Meta title={"Atoms/Title"} component={Title} />
+
+## API
+
+<ArgsTable component={Title} />
+
+## Stories
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    <Title>Short title</Title>
+  </Story>
+</Canvas>
+
+### Long title
+
+<Canvas>
+  <Story name="Long title">
+    <Title>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi convallis
+      tristique nisl luctus eleifend. Nam sagittis velit vel velit condimentum,
+      eget luctus ligula pellentesque. Vivamus at tellus eget nibh molestie
+      convallis.
+    </Title>
+  </Story>
+</Canvas>
+
+
+### Long title truncate
+
+<Canvas>
+  <Story name="Long title truncate (2)">
+    <Title truncate={2}>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi convallis
+      tristique nisl luctus eleifend. Nam sagittis velit vel velit condimentum,
+      eget luctus ligula pellentesque. Vivamus at tellus eget nibh molestie
+      convallis.
+    </Title>
+  </Story>
+</Canvas>
