@@ -1,5 +1,4 @@
-import { ItemModel } from "@webshop/models";
-import { RequestState } from "@webshop/models";
+import { ItemModel, RequestState } from "@webshop/models";
 import React from "react";
 import { ItemResult } from "@webshop/organisms";
 import { Spinner } from "@webshop/atoms";
@@ -11,7 +10,7 @@ interface HomeProps {
   cart: Record<string, ItemModel>;
 }
 
-export const Home: React.FunctionComponent<HomeProps> = ({
+export const HomePage: React.FunctionComponent<HomeProps> = ({
   itemsState: { data, error, loading },
   addToCart,
   cart,

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { ItemModel } from "@webshop/models";
-import { Home } from "@webshop/pages";
-import { useRemoteItems } from "@webshop/hooks";
+import { HomePage } from "@webshop/pages";
+import { useRemoteGetItems } from "@webshop/hooks";
 
 type Cart = Record<string, ItemModel>;
 
 let ITEM_LIMIT = 6;
 
 export default function Index() {
-  const itemsState = useRemoteItems({
+  const itemsState = useRemoteGetItems({
     limit: ITEM_LIMIT,
   });
 
@@ -21,5 +21,5 @@ export default function Index() {
     });
   };
 
-  return <Home addToCart={addToCart} cart={cart} itemsState={itemsState} />;
+  return <HomePage addToCart={addToCart} cart={cart} itemsState={itemsState} />;
 }

@@ -7,7 +7,7 @@ interface CategoriesProps {
   categoriesState: RequestState<Category[]>;
 }
 
-export const Categories: React.FunctionComponent<CategoriesProps> = ({
+export const CategoriesPage: React.FunctionComponent<CategoriesProps> = ({
   categoriesState: { data, error, loading },
 }) => {
   return loading ? (

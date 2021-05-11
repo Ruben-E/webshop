@@ -3,10 +3,10 @@ import { toQueryParams } from "@webshop/utils";
 import { useRemoteGet } from "../remote-get/remote-get.hook";
 import { environment } from "@webshop/config";
 
-interface RemoteItemsParams {
+export interface RemoteGetItemsParams {
   limit?: number;
   sort?: "asc" | "desc";
 }
 
-export const useRemoteItems = (params: RemoteItemsParams = {}) =>
+export const useRemoteGetItems = (params: RemoteGetItemsParams = {}) =>
   useRemoteGet<ItemModel[]>(`${environment.itemsApi}${toQueryParams(params)}`);

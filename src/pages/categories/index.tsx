@@ -1,9 +1,9 @@
 import React from "react";
-import { Categories } from "@webshop/pages";
-import { useRemoteCategories } from "@webshop/hooks";
+import { CategoriesPage } from "@webshop/pages";
+import { useRemoteGetCategories } from "@webshop/hooks";
 
-export default function Index() {
-  const categoriesState = useRemoteCategories();
+export default function Categories() {
+  const categoriesState = useRemoteGetCategories();
 
-  return <Categories categoriesState={categoriesState} />;
+  return <CategoriesPage categoriesState={categoriesState} />;
 }

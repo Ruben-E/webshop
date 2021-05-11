@@ -1,10 +1,10 @@
 import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
-import { Categories } from "./categories";
+import { CategoriesPage } from "./categories";
 import { AppLayout } from "../../../pages/_app";
 
 <Meta
   title={"Pages/Categories"}
-  component={Categories}
+  component={CategoriesPage}
   parameters={{
     layout: "fullscreen",
     docs: {
@@ -15,7 +15,7 @@ import { AppLayout } from "../../../pages/_app";
 
 ## API
 
-<ArgsTable component={Categories} />
+<ArgsTable component={CategoriesPage} />
 
 ## Stories
 
@@ -24,7 +24,7 @@ import { AppLayout } from "../../../pages/_app";
 <Canvas>
   <Story name="4 categories" height={"260px"}>
     <AppLayout currentRoute={"/categories"}>
-      <Categories
+      <CategoriesPage
         categoriesState={{
           loading: false,
           data: ["category1", "category2", "category3", "category4"],
@@ -39,7 +39,7 @@ import { AppLayout } from "../../../pages/_app";
 <Canvas>
   <Story name="Loading" height={"260px"}>
     <AppLayout currentRoute={"/categories"}>
-      <Categories
+      <CategoriesPage
         categoriesState={{
           loading: true,
         }}
@@ -53,7 +53,7 @@ import { AppLayout } from "../../../pages/_app";
 <Canvas>
   <Story name="Error" height={"260px"}>
     <AppLayout currentRoute={"/categories"}>
-      <Categories
+      <CategoriesPage
         categoriesState={{
           loading: false,
           error: new Error("Something went wrong"),
