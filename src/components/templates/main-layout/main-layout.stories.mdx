@@ -1,0 +1,48 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { MainLayout } from "./main-layout";
+import styled from "styled-components";
+
+<Meta
+  title={"Templates/MainLayout"}
+  component={MainLayout}
+  parameters={{
+    layout: "fullscreen",
+    docs: {
+      inlineStories: false,
+    },
+  }}
+/>
+
+## API
+
+<ArgsTable component={MainLayout} />
+
+## Stories
+
+### Default
+
+export const Header = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: ${({ theme }) => theme.colors.primary.dark};
+  color: white;
+  text-align: center;
+  padding-top: 16px;
+`;
+
+export const Content = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: ${({ theme }) => theme.colors.primary.base};
+  color: white;
+  text-align: center;
+  padding-top: 16px;
+`;
+
+<Canvas>
+  <Story name="Default">
+    <MainLayout headerContent={<Header>Header slot</Header>}>
+      <Content>Content slot</Content>
+    </MainLayout>
+  </Story>
+</Canvas>
