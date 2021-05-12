@@ -24,33 +24,31 @@ export const ItemResult: React.FunctionComponent<ItemProps> = ({
     <ItemContainer>
       <Item item={item} />
       <ItemActions>
-        <>
-          <div style={{ width: "128px" }}>
-            <QuantityInput
-              quantity={quantity}
-              onChange={setQuantity}
-              disabled={inCart}
-            />
-          </div>
-          {!inCart ? (
-            <ButtonIcon
-              icon={<FaCartPlus />}
-              category={"primary"}
-              disabled={quantity === 0}
-              onClick={addToCart}
-              style={{ flex: 1 }}
-            />
-          ) : (
-            <ButtonIcon
-              icon={<FaShoppingCart />}
-              category={"secondary"}
-              position={"right"}
-              style={{ flex: 1 }}
-            >
-              Go to cart
-            </ButtonIcon>
-          )}
-        </>
+        <div style={{ width: "128px" }}>
+          <QuantityInput
+            quantity={quantity}
+            onChange={setQuantity}
+            disabled={inCart}
+          />
+        </div>
+        {!inCart ? (
+          <ButtonIcon
+            icon={<FaCartPlus />}
+            category={"primary"}
+            disabled={quantity === 0}
+            onClick={addToCart}
+            style={{ flex: 1 }}
+          />
+        ) : (
+          <ButtonIcon
+            icon={<FaShoppingCart />}
+            category={"secondary"}
+            position={"right"}
+            style={{ flex: 1 }}
+          >
+            Go to cart
+          </ButtonIcon>
+        )}
       </ItemActions>
     </ItemContainer>
   );
