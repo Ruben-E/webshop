@@ -1,0 +1,56 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { ItemResult } from "./item-result";
+import { ITEMS } from "../../../data";
+
+<Meta
+  title={"Organisms/ItemResult"}
+  component={ItemResult}
+  parameters={{
+    layout: "fullscreen",
+  }}
+/>
+
+## API
+
+<ArgsTable component={ItemResult} />
+
+## Stories
+
+export const noop = () => {};
+
+### Not in cart
+
+<Canvas>
+  <Story name="Default">
+    <ItemResult
+      item={{
+        ...ITEMS[0],
+        inCart: false,
+      }}
+      onAddToCart={noop}
+    />
+  </Story>
+</Canvas>
+
+### In cart
+
+<Canvas>
+  <Story name="In Cart">
+    <ItemResult
+      item={{
+        ...ITEMS[0],
+        inCart: true,
+        quantity: 2,
+      }}
+      onAddToCart={noop}
+    />
+  </Story>
+</Canvas>
+
+### Missing cart data
+
+<Canvas>
+  <Story name="Missing cart data">
+    <ItemResult item={ITEMS[0]} onAddToCart={noop} />
+  </Story>
+</Canvas>

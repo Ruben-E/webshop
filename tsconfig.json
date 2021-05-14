@@ -23,7 +23,8 @@
       "@webshop/models": ["models"],
       "@webshop/utils": ["utils"],
       "@webshop/config": ["config"],
-      "@webshop/hooks": ["hooks"]
+      "@webshop/requests": ["requests"],
+      "@webshop/data": ["data"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

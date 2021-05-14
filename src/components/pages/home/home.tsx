@@ -1,39 +1,35 @@
-import { ItemModel, RequestState } from "@webshop/models";
+import { ClientItem, RequestState } from "@webshop/models";
 import React from "react";
 import { ItemResult } from "@webshop/organisms";
 import { Spinner } from "@webshop/atoms";
 import { List } from "@webshop/molecules";
+import styled from "styled-components";
 
 interface HomeProps {
-  itemsState: RequestState<ItemModel[]>;
-  addToCart: (item: ItemModel, quantity: number) => void;
-  cart: Record<string, ItemModel>;
+  itemsState: RequestState<ClientItem[]>;
+  addToCart: (id: number, quantity: number) => void;
 }
 
 export const HomePage: React.FunctionComponent<HomeProps> = ({
   itemsState: { data, error, loading },
   addToCart,
-  cart,
-}) => {
-  const isInCart = (item: ItemModel) => cart[item.id] !== undefined;
-
-  return loading ? (
+}) =>
+  loading ? (
     <Spinner style={{ alignSelf: "center" }}>Loading items...</Spinner>
   ) : error ? (
     <p style={{ alignSelf: "center" }}>Error</p>
   ) : data ? (
     <List>
       {data.map((item) => (
-        <li key={`item--${item.id}`} style={{ padding: "8px" }}>
-          <ItemResult
-            item={item}
-            inCart={isInCart(item)}
-            onAddToCart={addToCart}
-          />
-        </li>
+        <ListItem key={`item--${item.id}`}>
+          <ItemResult item={item} onAddToCart={addToCart} />
+        </ListItem>
       ))}
     </List>
   ) : (
     <p>No data</p>
   );
-};
+
+const ListItem = styled.li`
+  padding: 8px;
+`;

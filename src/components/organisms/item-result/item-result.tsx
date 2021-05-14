@@ -2,37 +2,38 @@ import styled from "styled-components";
 import { FaCartPlus, FaShoppingCart } from "react-icons/fa";
 import React, { useState } from "react";
 import { Item, QuantityInput } from "@webshop/molecules";
-import { ItemModel } from "@webshop/models";
-import { ButtonIcon } from "@webshop/atoms";
+import { ClientItem } from "@webshop/models";
+import { ButtonIcon, Spinner } from "@webshop/atoms";
+import Link from "next/link";
 
 interface ItemProps {
-  item: ItemModel;
-  inCart: boolean;
-  onAddToCart: (item: ItemModel, quantity: number) => void;
+  item: ClientItem;
+  onAddToCart: (id: number, quantity: number) => void;
 }
 export const ItemResult: React.FunctionComponent<ItemProps> = ({
   item,
-  inCart,
   onAddToCart,
 }) => {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(item.quantity || 1);
 
   const addToCart = () => {
-    onAddToCart(item, quantity);
+    onAddToCart(item.id, quantity);
   };
   return (
     <ItemContainer>
       <Item item={item} />
-      <ItemActions>
-        <>
+      {item.inCart === undefined ? (
+        <Spinner style={{ flex: 1 }}>Loading cart info</Spinner>
+      ) : (
+        <ItemActions>
           <div style={{ width: "128px" }}>
             <QuantityInput
               quantity={quantity}
               onChange={setQuantity}
-              disabled={inCart}
+              disabled={item.inCart}
             />
           </div>
-          {!inCart ? (
+          {!item.inCart ? (
             <ButtonIcon
               icon={<FaCartPlus />}
               category={"primary"}
@@ -41,17 +42,19 @@ export const ItemResult: React.FunctionComponent<ItemProps> = ({
               style={{ flex: 1 }}
             />
           ) : (
-            <ButtonIcon
-              icon={<FaShoppingCart />}
-              category={"secondary"}
-              position={"right"}
-              style={{ flex: 1 }}
-            >
-              Go to cart
-            </ButtonIcon>
+            <Link href={"/cart"}>
+              <ButtonIcon
+                icon={<FaShoppingCart />}
+                category={"secondary"}
+                position={"right"}
+                style={{ flex: 1 }}
+              >
+                Go to cart
+              </ButtonIcon>
+            </Link>
           )}
-        </>
-      </ItemActions>
+        </ItemActions>
+      )}
     </ItemContainer>
   );
 };

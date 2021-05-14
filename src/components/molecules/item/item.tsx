@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { ItemModel } from "@webshop/models";
+import { RemoteItem } from "@webshop/models";
 import { Description, Link, Rating, Title } from "@webshop/atoms";
 
 interface ItemProps {
-  item: ItemModel;
+  item: RemoteItem;
 }
 
 export const Item: React.FunctionComponent<ItemProps> = ({ item }) => (

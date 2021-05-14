@@ -1,7 +1,7 @@
 import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
 import { HomePage } from "./home";
-import { ITEMS_MOCK } from "../../../mocks/items.mock";
 import { AppLayout } from "../../../pages/_app";
+import { ITEMS } from "../../../data";
 
 <Meta
   title={"Pages/Home"}
@@ -23,14 +23,14 @@ import { AppLayout } from "../../../pages/_app";
 ### Loaded 2 results
 
 export const noop = () => {};
+export const CLIENT_ITEMS = ITEMS.map((item) => ({ ...item, inCart: false }));
 
 <Canvas>
-  <Story name="2 items" height={"260px"}>
+  <Story name="2 items" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <HomePage
         addToCart={noop}
-        cart={{}}
-        itemsState={{ loading: false, data: ITEMS_MOCK.slice(0, 2) }}
+        itemsState={{ loading: false, data: CLIENT_ITEMS.slice(0, 2) }}
       />
     </AppLayout>
   </Story>
@@ -39,13 +39,22 @@ export const noop = () => {};
 ### Loaded 2 results
 
 <Canvas>
-  <Story name="6 items" height={"260px"}>
+  <Story name="6 items" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <HomePage
         addToCart={noop}
-        cart={{}}
-        itemsState={{ loading: false, data: ITEMS_MOCK }}
+        itemsState={{ loading: false, data: CLIENT_ITEMS }}
       />
+    </AppLayout>
+  </Story>
+</Canvas>
+
+### Cart Loading
+
+<Canvas>
+  <Story name="Cart loading" height={"480px"}>
+    <AppLayout currentRoute={"/"}>
+      <HomePage addToCart={noop} itemsState={{ loading: false, data: ITEMS }} />
     </AppLayout>
   </Story>
 </Canvas>
@@ -53,9 +62,9 @@ export const noop = () => {};
 ### Loading
 
 <Canvas>
-  <Story name="Loading" height={"260px"}>
+  <Story name="Loading" height={"480px"}>
     <AppLayout currentRoute={"/"}>
-      <HomePage addToCart={noop} itemsState={{ loading: true }} cart={{}} />
+      <HomePage addToCart={noop} itemsState={{ loading: true }} />
     </AppLayout>
   </Story>
 </Canvas>
@@ -63,12 +72,11 @@ export const noop = () => {};
 ### Error
 
 <Canvas>
-  <Story name="Error" height={"260px"}>
+  <Story name="Error" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <HomePage
         addToCart={noop}
         itemsState={{ error: new Error("Something went wrong") }}
-        cart={{}}
       />
     </AppLayout>
   </Story>

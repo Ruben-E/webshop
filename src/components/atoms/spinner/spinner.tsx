@@ -4,9 +4,7 @@ import React, { HTMLAttributes } from "react";
 import { Description } from "..";
 
 const SpinnerIcon = styled(CgSpinner)`
-  width: 100%;
   animation: spin infinite 1s linear;
-  font-size: 64px;
   color: ${({ theme }) => theme.colors.primary.base};
 
   @keyframes spin {
@@ -22,13 +20,18 @@ const SpinnerIcon = styled(CgSpinner)`
 const SpinnerContainer = styled.div`
   overflow: hidden;
   text-align: center;
+  display: inline-block;
 `;
 
+interface SpinnerProps {
+  size?: "sm" | "md" | "lg";
+}
+
 export const Spinner: React.FunctionComponent<
-  HTMLAttributes<HTMLDivElement>
-> = ({ children, ...htmlAttributes }) => (
+  HTMLAttributes<HTMLDivElement> & SpinnerProps
+> = ({ children, size, ...htmlAttributes }) => (
   <SpinnerContainer {...htmlAttributes}>
-    <SpinnerIcon />
+    <SpinnerIcon size={size === "sm" ? "16" : "md" ? "32" : "64"} />
     {React.Children.count(children) > 0 && (
       <Description>{children}</Description>
     )}

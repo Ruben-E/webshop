@@ -1,24 +1,21 @@
-import { Category, ItemModel, RequestState } from "@webshop/models";
+import { Category, RequestState } from "@webshop/models";
 import React from "react";
 import { ItemResult } from "@webshop/organisms";
 import { Divider, Spinner, Title } from "@webshop/atoms";
 import { List } from "@webshop/molecules";
+import { ClientItem } from "@webshop/models";
 
 interface CategoryPageProps {
   category: Category;
-  itemsState: RequestState<ItemModel[]>;
-  addToCart: (item: ItemModel, quantity: number) => void;
-  cart: Record<string, ItemModel>;
+  itemsState: RequestState<ClientItem[]>;
+  addToCart: (id: number, quantity: number) => void;
 }
 
 export const CategoryPage: React.FunctionComponent<CategoryPageProps> = ({
   category,
   itemsState: { data, error, loading },
   addToCart,
-  cart,
 }) => {
-  const isInCart = (item: ItemModel) => cart[item.id] !== undefined;
-
   return loading ? (
     <Spinner style={{ alignSelf: "center" }}>Loading items...</Spinner>
   ) : error ? (
@@ -30,11 +27,7 @@ export const CategoryPage: React.FunctionComponent<CategoryPageProps> = ({
       <List>
         {data.map((item) => (
           <li key={`item--${item.id}`} style={{ padding: "8px" }}>
-            <ItemResult
-              item={item}
-              inCart={isInCart(item)}
-              onAddToCart={addToCart}
-            />
+            <ItemResult item={item} onAddToCart={addToCart} />
           </li>
         ))}
       </List>

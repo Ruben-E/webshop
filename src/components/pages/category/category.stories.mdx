@@ -1,7 +1,7 @@
 import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
 import { CategoryPage } from "./category";
-import { ITEMS_MOCK } from "../../../mocks/items.mock";
 import { AppLayout } from "../../../pages/_app";
+import { ITEMS } from "../../../data";
 
 <Meta
   title={"Pages/Category"}
@@ -25,28 +25,28 @@ import { AppLayout } from "../../../pages/_app";
 export const noop = () => {};
 
 <Canvas>
-  <Story name="2 items" height={"260px"}>
+  <Story name="2 items" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <CategoryPage
         category={"Category 1"}
         addToCart={noop}
         cart={{}}
-        itemsState={{ loading: false, data: ITEMS_MOCK.slice(0, 2) }}
+        itemsState={{ loading: false, data: ITEMS.slice(0, 2) }}
       />
     </AppLayout>
   </Story>
 </Canvas>
 
-### Loaded 2 results
+### Loaded 6 results
 
 <Canvas>
-  <Story name="6 items" height={"260px"}>
+  <Story name="6 items" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <CategoryPage
         category={"Category 1"}
         addToCart={noop}
         cart={{}}
-        itemsState={{ loading: false, data: ITEMS_MOCK }}
+        itemsState={{ loading: false, data: ITEMS.slice(0, 6) }}
       />
     </AppLayout>
   </Story>
@@ -55,7 +55,7 @@ export const noop = () => {};
 ### Loading
 
 <Canvas>
-  <Story name="Loading" height={"260px"}>
+  <Story name="Loading" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <CategoryPage
         category={"Category 1"}
@@ -70,7 +70,7 @@ export const noop = () => {};
 ### Error
 
 <Canvas>
-  <Story name="Error" height={"260px"}>
+  <Story name="Error" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <CategoryPage
         category={"Category 1"}

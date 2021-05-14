@@ -16,9 +16,4 @@ export const NAVIGATION: NavigationModel = [
     icon: "shopping-cart",
     url: "/cart",
   },
-  {
-    type: "icon",
-    icon: "user",
-    url: "/user",
-  },
 ];

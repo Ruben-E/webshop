@@ -1,0 +1,158 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
+import { CartPage } from "./cart";
+import { AppLayout } from "../../../pages/_app";
+import { ITEMS } from "../../../data/items.data";
+
+<Meta
+  title={"Pages/Cart"}
+  component={CartPage}
+  parameters={{
+    layout: "fullscreen",
+    docs: {
+      inlineStories: false,
+    },
+  }}
+/>
+
+## API
+
+<ArgsTable component={CartPage} />
+
+## Stories
+
+### Cart 1 items
+
+<Canvas>
+  <Story name="1 cart item" height={"480px"}>
+    <AppLayout currentRoute={"/cart"}>
+      <CartPage
+        cartState={{
+          loading: false,
+          data: [
+            {
+              ...ITEMS[0],
+              quantity: 2,
+              total: "219.90",
+            },
+          ],
+        }}
+        totalPriceState={{
+          loading: false,
+          data: "219.90",
+        }}
+      />
+    </AppLayout>
+  </Story>
+</Canvas>
+
+### Cart 2 items
+
+<Canvas>
+  <Story name="2 cart items" height={"480px"}>
+    <AppLayout currentRoute={"/cart"}>
+      <CartPage
+        cartState={{
+          loading: false,
+          data: [
+            {
+              ...ITEMS[0],
+              quantity: 2,
+              total: "219.90",
+            },
+            {
+              ...ITEMS[1],
+              quantity: 2,
+              total: "44.60",
+            },
+          ],
+        }}
+        totalPriceState={{
+          loading: false,
+          data: "264.50",
+        }}
+      />
+    </AppLayout>
+  </Story>
+</Canvas>
+
+### Cart update item
+
+<Canvas>
+  <Story name="Update cart item" height={"480px"}>
+    <AppLayout currentRoute={"/cart"}>
+      <CartPage
+        cartState={{
+          loading: false,
+          data: [
+            {
+              ...ITEMS[0],
+              quantity: 2,
+              total: "",
+            },
+          ],
+        }}
+        totalPriceState={{
+          loading: true,
+        }}
+      />
+    </AppLayout>
+  </Story>
+</Canvas>
+
+### Cart total price
+
+<Canvas>
+  <Story name="Update cart total price" height={"480px"}>
+    <AppLayout currentRoute={"/cart"}>
+      <CartPage
+        cartState={{
+          loading: false,
+          data: [
+            {
+              ...ITEMS[0],
+              quantity: 2,
+              total: "219.90",
+            },
+          ],
+        }}
+        totalPriceState={{
+          loading: true,
+        }}
+      />
+    </AppLayout>
+  </Story>
+</Canvas>
+
+### Loading
+
+<Canvas>
+  <Story name="Loading" height={"480px"}>
+    <AppLayout currentRoute={"/cart"}>
+      <CartPage
+        cartState={{
+          loading: true,
+        }}
+        totalPriceState={{
+          loading: true,
+        }}
+      />
+    </AppLayout>
+  </Story>
+</Canvas>
+
+### Error
+
+<Canvas>
+  <Story name="Error" height={"480px"}>
+    <AppLayout currentRoute={"/cart"}>
+      <CartPage
+        cartState={{
+          error: new Error("Something went wrong"),
+        }}
+        totalPriceState={{
+          loading: true,
+        }}
+      />
+    </AppLayout>
+  </Story>
+</Canvas>
