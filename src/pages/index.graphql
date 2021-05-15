@@ -1,0 +1,19 @@
+query Items {
+  items {
+    id
+    title
+    price
+    description
+    image
+    category
+  }
+}
+
+query CartItemIds {
+  cart {
+    items {
+      id
+      quantity
+    }
+  }
+}

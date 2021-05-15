@@ -1,20 +1,9 @@
 import React from "react";
 import { CategoriesPage } from "@webshop/pages";
-import { gql, useQuery } from "@apollo/client";
-import { GQLCategory } from "@webshop/graphql";
-
-const CATEGORIES = gql`
-  query Categories {
-    categories {
-      title
-    }
-  }
-`;
+import { useCategoryTitlesQuery } from "@webshop/graphql";
 
 export default function Categories() {
-  const categoriesState = useQuery<
-    Record<"categories", Pick<GQLCategory, "title">[]>
-  >(CATEGORIES);
+  const categoriesState = useCategoryTitlesQuery();
 
   return (
     <CategoriesPage

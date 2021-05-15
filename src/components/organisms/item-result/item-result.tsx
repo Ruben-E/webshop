@@ -28,7 +28,7 @@ export const ItemResult: React.FunctionComponent<ItemProps> = ({
         <ItemActions>
           <div style={{ width: "128px" }}>
             <QuantityInput
-              quantity={quantity}
+              quantity={item.inCart ? item.quantity || quantity : quantity}
               onChange={setQuantity}
               disabled={item.inCart}
             />

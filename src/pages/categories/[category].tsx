@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { CategoryPage } from "@webshop/pages";
-import { ClientItem, RemoteCartItem, RequestState } from "@webshop/models";
+import { ClientItem } from "@webshop/models";
 import { NextPageContext } from "next";
-import { addItemToCartRequest, getCartRequest } from "@webshop/requests";
+import { addItemToCartRequest } from "@webshop/requests";
 import { normalize } from "@webshop/utils";
-import { gql, useQuery } from "@apollo/client";
-import { GQLCategory } from "@webshop/graphql";
+import { useCartItemIdsQuery, useItemsByCategoryQuery } from "@webshop/graphql";
 
 const QUERY_PARAM_NAME = "category";
 
@@ -13,91 +12,51 @@ interface CategoryInitialProps {
   category: string;
 }
 
-const ITEMS_BY_CATEGORY = gql`
-  query ItemsByCategory($title: String!) {
-    category(title: $title) {
-      title
-      items {
-        id
-        title
-        price
-        description
-        image
-        category
-      }
-    }
-  }
-`;
-
 export default function Category({ category }: CategoryInitialProps) {
-  const itemsByCategoryState = useQuery<Record<"category", GQLCategory>>(
-    ITEMS_BY_CATEGORY,
-    {
-      variables: {
-        title: category,
-      },
-    }
-  );
+  const [items, setItems] = useState<ClientItem[]>([]);
 
-  const [itemsState, setItemsState] = useState<RequestState<ClientItem[]>>({
-    loading: true,
+  const itemsByCategoryQuery = useItemsByCategoryQuery({
+    variables: {
+      title: category,
+    },
   });
-
-  const [cartState, setCartState] = useState<RequestState<RemoteCartItem[]>>({
-    loading: true,
-  });
-
   /**
    * Get items from server
    */
   useEffect(() => {
-    if (itemsByCategoryState.data) {
-      setItemsState({
-        loading: false,
-        data: itemsByCategoryState.data.category.items,
-      });
-    }
-  }, [itemsByCategoryState.data]);
+    setItems(itemsByCategoryQuery.data?.category?.items || []);
+  }, [itemsByCategoryQuery.data]);
 
-  /**
-   * Get cart from server
-   */
-  useEffect(() => {
-    (async () => {
-      try {
-        const cart = await getCartRequest();
-        setCartState({ loading: false, data: cart });
-      } catch (error) {
-        setCartState({ loading: false, error });
-      }
-    })();
-  }, []);
+  const cartItemIdsQuery = useCartItemIdsQuery();
 
   /**
    * Enrich remote item to client item.
    */
   useEffect(() => {
-    const items = itemsState.data;
-    const cart = cartState.data;
-
-    if (items && cart) {
-      const normalizedCart = normalize(cart);
-      setItemsState((state) => ({
-        ...state,
-        data: state.data!.map((item) => ({
-          ...item,
-          ...(normalizedCart[item.id] !== undefined
-            ? {
-                inCart: true,
-                quantity: normalizedCart[item.id].quantity,
-              }
-            : {
-                inCart: false,
-              }),
-        })),
-      }));
+    const items = itemsByCategoryQuery.data?.category?.items;
+    const cart = cartItemIdsQuery.data?.cart?.items;
+    if (!items || !cart) {
+      return;
     }
-  }, [itemsState.data !== undefined, cartState.data !== undefined]);
+
+    const normalizedCart = normalize(cart);
+    const updatedItems = items.map((item) => {
+      const inCart = normalizedCart[item.id] !== undefined;
+      if (inCart) {
+        return {
+          ...item,
+          inCart: true,
+          quantity: normalizedCart[item.id].quantity,
+        };
+      } else {
+        return {
+          ...item,
+          inCart: false,
+        };
+      }
+    });
+    setItems(updatedItems);
+  }, [itemsByCategoryQuery.data, cartItemIdsQuery.data]);
 
   /**
    * Add item to cart remotely and update local state accordingly.
@@ -106,18 +65,16 @@ export default function Category({ category }: CategoryInitialProps) {
     (async () => {
       try {
         await addItemToCartRequest(id, quantity);
-        setItemsState((state) => ({
-          ...state,
-          data: state.data!.map((item) =>
-            item.id !== id
-              ? item
-              : {
-                  ...item,
-                  inCart: true,
-                  quantity,
-                }
-          ),
-        }));
+        const updatedItems = items.map((item) =>
+          item.id !== id
+            ? item
+            : {
+                ...item,
+                inCart: true,
+                quantity,
+              }
+        );
+        setItems(updatedItems);
       } catch (error) {
         console.error("Add item to cart failed", error);
       }
@@ -127,7 +84,11 @@ export default function Category({ category }: CategoryInitialProps) {
   return (
     <CategoryPage
       category={{ title: category }}
-      itemsState={itemsState}
+      itemsState={{
+        loading: itemsByCategoryQuery.loading,
+        data: items,
+        error: itemsByCategoryQuery.error,
+      }}
       addToCart={addToCart}
     />
   );

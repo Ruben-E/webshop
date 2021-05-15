@@ -3,37 +3,12 @@ import { ClientItem } from "@webshop/models";
 import { HomePage } from "@webshop/pages";
 import { normalize } from "@webshop/utils";
 import { addItemToCartRequest } from "@webshop/requests";
-import { gql, useQuery } from "@apollo/client";
-import { GQLItem } from "@webshop/graphql";
-
-const ITEMS = gql`
-  query Items {
-    items {
-      id
-      title
-      price
-      description
-      image
-      category
-    }
-  }
-`;
-
-const CART_ITEM_IDS = gql`
-  query CartItemIds {
-    cart {
-      items {
-        id
-        quantity
-      }
-    }
-  }
-`;
+import { useCartItemIdsQuery, useItemsQuery } from "@webshop/graphql";
 
 export default function Index() {
   const [items, setItems] = useState<ClientItem[]>([]);
 
-  const itemsQuery = useQuery<Record<"items", GQLItem[]>>(ITEMS);
+  const itemsQuery = useItemsQuery();
   /**
    * Get items from server
    */
@@ -41,9 +16,7 @@ export default function Index() {
     setItems(itemsQuery.data?.items || []);
   }, [itemsQuery.data]);
 
-  const cartItemIdsQuery = useQuery<{
-    cart: { items: { id: number; quantity: number }[] };
-  }>(CART_ITEM_IDS);
+  const cartItemIdsQuery = useCartItemIdsQuery();
 
   /**
    * Enrich remote item to client item.

@@ -7,7 +7,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET": {
       res.status(200).json(JSON.stringify(PRICES[id]));
-      console.debug(`/api/prices/${id} returned 200`, PRICES[id]);
+      console.debug(`/api/prices/${id} returned`, PRICES[id]);
       break;
     }
     default: {

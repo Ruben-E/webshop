@@ -1,8 +1,12 @@
 schema: "./graphql/schema.graphql"
 overwrite: true
+documents: "./src/**/*.graphql"
 generates:
   ./.generated/index.ts:
     plugins:
       - typescript
+      - typescript-operations
+      - typescript-react-apollo
     config:
       typesPrefix: GQL
+      withHooks: true

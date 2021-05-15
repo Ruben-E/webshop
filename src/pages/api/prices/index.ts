@@ -13,7 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         prices = Object.keys(PRICES).map((id) => PRICES[id.toString()]);
       }
       res.status(200).json(prices);
-      console.debug("/api/prices returned 200", prices);
+      console.debug("/api/prices returned", prices.length, 'prices');
       break;
     }
     default: {

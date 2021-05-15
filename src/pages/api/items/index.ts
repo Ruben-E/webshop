@@ -13,7 +13,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         items = ITEMS;
       }
       res.status(200).json(items);
-      console.debug(`/api/items returned 200`, items);
+      console.debug(`/api/items returned`, items.length, 'items');
       break;
     }
     default: {
