@@ -42,15 +42,17 @@ export const ItemResult: React.FunctionComponent<ItemProps> = ({
               style={{ flex: 1 }}
             />
           ) : (
-            <Link href={"/cart"}>
-              <ButtonIcon
-                icon={<FaShoppingCart />}
-                category={"secondary"}
-                position={"right"}
-                style={{ flex: 1 }}
-              >
-                Go to cart
-              </ButtonIcon>
+            <Link href={"/cart"} passHref={true}>
+              <a style={{ display: "flex", flex: 1 }}>
+                <ButtonIcon
+                  icon={<FaShoppingCart />}
+                  category={"secondary"}
+                  position={"right"}
+                  style={{ flex: 1 }}
+                >
+                  Go to cart
+                </ButtonIcon>
+              </a>
             </Link>
           )}
         </ItemActions>
