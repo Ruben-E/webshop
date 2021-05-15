@@ -14,13 +14,27 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       } else {
         items = ITEMS.slice(0);
       }
+      const originalSize = items.length;
       if (page && size) {
         const pageInt = parseInt(page);
         const sizeInt = parseInt(size);
         const start = pageInt * sizeInt;
         items = items.splice(start, sizeInt);
+        res.status(200).json({
+          content: items,
+          page: pageInt,
+          size: sizeInt,
+          totalResults: originalSize,
+        });
+      } else {
+        res.status(200).json({
+          content: items,
+          page: 0,
+          size: originalSize,
+          totalResults: originalSize,
+        });
       }
-      res.status(200).json(items);
+
       console.debug(`/api/items returned`, items.length, "items");
       break;
     }

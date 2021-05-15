@@ -1,4 +1,5 @@
 import { toQueryParams } from "@webshop/utils";
+import { ClientItem } from "@webshop/models";
 
 export interface RemoteGetItemsParams {
   limit?: number;
@@ -9,7 +10,7 @@ export interface RemoteGetItemsParams {
 export const getItemsRequest = ({
   ids,
   ...params
-}: RemoteGetItemsParams = {}) =>
+}: RemoteGetItemsParams = {}): Promise<{ content: ClientItem[] }> =>
   fetch(
     `/api/items${toQueryParams({
       ...params,

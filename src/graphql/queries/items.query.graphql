@@ -1,5 +1,10 @@
-query Items {
-  items {
-    ...DisplayedItem
+query Items($page: Int, $size: Int) {
+  items(params: { page: $page, size: $size }) {
+    content {
+      ...DisplayedItem
+    }
+    page
+    size
+    totalResults
   }
 }

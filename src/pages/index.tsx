@@ -9,7 +9,12 @@ import { initializeApollo } from "./_app";
 import gql from "graphql-tag";
 
 export default function Index() {
-  const itemsQuery = useItemsQuery();
+  const itemsQuery = useItemsQuery({
+    variables: {
+      size: 6,
+      page: 0,
+    },
+  });
 
   const [addToCartMutation] = useAddToCartMutation();
 
@@ -25,8 +30,11 @@ export default function Index() {
             {
               query: gql`
                 query AmountInCart {
-                  items {
-                    amountInCart
+                  items(params: { page: 0, size: 6 }) {
+                    content {
+                      id
+                      amountInCart
+                    }
                   }
                 }
               `,
@@ -44,7 +52,7 @@ export default function Index() {
       addToCart={addToCart}
       itemsState={{
         loading: itemsQuery.loading,
-        data: itemsQuery.data?.items,
+        data: itemsQuery.data?.items.content,
         error: itemsQuery.error,
       }}
     />
@@ -55,6 +63,10 @@ export async function getStaticProps() {
   const apolloClient = initializeApollo();
   await apolloClient.query({
     query: ItemsDocument,
+    variables: {
+      page: 0,
+      size: 6,
+    },
   });
   return {
     props: {

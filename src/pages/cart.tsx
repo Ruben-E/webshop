@@ -58,17 +58,19 @@ export default function Cart() {
           return;
         }
 
-        const items: RemoteItem[] = await getItemsRequest({
+        const itemsResponse = await getItemsRequest({
           ids: cart.map(({ id }) => id),
         });
 
         const normalizedCart = normalize(cart);
 
-        const cartItems: CartItemModel[] = items.map((item) => ({
-          ...item,
-          quantity: normalizedCart[item.id].quantity,
-          total: normalizedCart[item.id].total,
-        }));
+        const cartItems: CartItemModel[] = itemsResponse.content.map(
+          (item) => ({
+            ...item,
+            quantity: normalizedCart[item.id].quantity,
+            total: normalizedCart[item.id].total,
+          })
+        );
 
         setCartState({
           loading: false,

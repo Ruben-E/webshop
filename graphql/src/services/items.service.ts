@@ -1,4 +1,4 @@
-import { GQLItem, GQLItemsParams } from "../../.generated";
+import { GQLItem, GQLItemsParams, GQLPagedItems } from "../../.generated";
 import fetch from "node-fetch";
 import { toQueryParams } from "../../../src/utils";
 import DataLoader from "dataloader";
@@ -12,13 +12,15 @@ export class ItemsService {
               `http://localhost:3000/api/items/${ids[0]}`
             ).then((res) => res.json()),
           ]
-        : this.get({ ids })
+        : this.get({ ids }).then((data) => data.content)
   );
 
-  async get(params: GQLItemsParams = {}): Promise<GQLItem[]> {
+  async get({ ids, page, size }: GQLItemsParams = {}): Promise<GQLPagedItems> {
     return fetch(
       `http://localhost:3000/api/items${toQueryParams({
-        ids: params.ids?.join(","),
+        ids: ids?.join(","),
+        page,
+        size,
       })}`
     ).then((res) => res.json());
   }

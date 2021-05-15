@@ -8,8 +8,17 @@ type Item {
   amountInCart: Int!
 }
 
+type PagedItems {
+  content: [Item!]!
+  size: Int!
+  page: Int!
+  totalResults: Int!
+}
+
 input ItemsParams {
   ids: [Int!]
+  page: Int
+  size: Int
 }
 
 type CartItem {
@@ -30,7 +39,7 @@ type Category {
 }
 
 type Query {
-  items(params: ItemsParams): [Item!]!
+  items(params: ItemsParams): PagedItems!
   cart: Cart!
   categories: [Category!]!
   category(title: String!): Category
