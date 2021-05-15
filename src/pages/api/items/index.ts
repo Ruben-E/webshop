@@ -6,7 +6,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET": {
       const ids = req.query.ids as string;
-      console.log(ids);
       let items: RemoteItem[];
       if (ids) {
         items = ids.split(",").map((id) => NORMALIZED_ITEMS[id]);
