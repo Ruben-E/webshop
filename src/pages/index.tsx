@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { ClientItem, RemoteCartItem, RequestState } from "@webshop/models";
+import { ClientItem } from "@webshop/models";
 import { HomePage } from "@webshop/pages";
 import { normalize } from "@webshop/utils";
-import { addItemToCartRequest, getCartRequest } from "@webshop/requests";
+import { addItemToCartRequest } from "@webshop/requests";
 import { gql, useQuery } from "@apollo/client";
 import { GQLItem } from "@webshop/graphql";
 
@@ -19,65 +19,60 @@ const ITEMS = gql`
   }
 `;
 
-export default function Index() {
-  const [itemsState, setItemsState] = useState<RequestState<ClientItem[]>>({
-    loading: true,
-  });
+const CART_ITEM_IDS = gql`
+  query CartItemIds {
+    cart {
+      items {
+        id
+        quantity
+      }
+    }
+  }
+`;
 
-  const items = useQuery<Record<"items", GQLItem[]>>(ITEMS);
+export default function Index() {
+  const [items, setItems] = useState<ClientItem[]>([]);
+
+  const itemsQuery = useQuery<Record<"items", GQLItem[]>>(ITEMS);
   /**
    * Get items from server
    */
   useEffect(() => {
-    setItemsState({
-      ...items,
-      data: items.data?.items,
-    });
-  }, [items.data]);
+    setItems(itemsQuery.data?.items || []);
+  }, [itemsQuery.data]);
 
-  const [cartState, setCartState] = useState<RequestState<RemoteCartItem[]>>({
-    loading: true,
-  });
-
-  /**
-   * Get cart from server
-   */
-  useEffect(() => {
-    (async () => {
-      try {
-        const cart = await getCartRequest();
-        setCartState({ loading: false, data: cart });
-      } catch (error) {
-        setCartState({ loading: false, error });
-      }
-    })();
-  }, []);
+  const cartItemIdsQuery = useQuery<{
+    cart: { items: { id: number; quantity: number }[] };
+  }>(CART_ITEM_IDS);
 
   /**
    * Enrich remote item to client item.
    */
   useEffect(() => {
-    const items = itemsState.data;
-    const cart = cartState.data;
-
-    if (items && cart) {
-      const normalizedCart = normalize(cart);
-      setItemsState((state) => ({
-        ...state,
-        data: state.data!.map((item) => ({
-          ...item,
-          ...(normalizedCart[item.id] !== undefined
-            ? {
-                inCart: true,
-                quantity: normalizedCart[item.id].quantity,
-              }
-            : {
-                inCart: false,
-              }),
-        })),
-      }));
+    const items = itemsQuery.data?.items;
+    const cart = cartItemIdsQuery.data?.cart?.items;
+    if (!items || !cart) {
+      return;
     }
-  }, [itemsState.data !== undefined, cartState.data !== undefined]);
+
+    const normalizedCart = normalize(cart);
+    const updatedItems = items.map((item) => {
+      const inCart = normalizedCart[item.id] !== undefined;
+      if (inCart) {
+        return {
+          ...item,
+          inCart: true,
+          quantity: normalizedCart[item.id].quantity,
+        };
+      } else {
+        return {
+          ...item,
+          inCart: false,
+        };
+      }
+    });
+    setItems(updatedItems);
+  }, [itemsQuery.data, cartItemIdsQuery.data]);
 
   /**
    * Add item to cart remotely and update local state accordingly.
@@ -86,9 +81,8 @@ export default function Index() {
     (async () => {
       try {
         await addItemToCartRequest(id, quantity);
-        setItemsState((state) => ({
-          ...state,
-          data: state.data!.map((item) =>
+        setItems(
+          items.map((item) =>
             item.id !== id
               ? item
               : {
@@ -96,13 +90,22 @@ export default function Index() {
                   inCart: true,
                   quantity,
                 }
-          ),
-        }));
+          )
+        );
       } catch (error) {
         console.error("Add item to cart failed", error);
       }
     })();
   };
 
-  return <HomePage addToCart={addToCart} itemsState={itemsState} />;
+  return (
+    <HomePage
+      addToCart={addToCart}
+      itemsState={{
+        loading: itemsQuery.loading,
+        data: items,
+        error: itemsQuery.error,
+      }}
+    />
+  );
 }

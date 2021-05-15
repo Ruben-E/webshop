@@ -12,7 +12,6 @@ const QUERY_PARAM_NAME = "category";
 interface CategoryInitialProps {
   category: string;
 }
-const ITEM_LIMIT = 6;
 
 const ITEMS_BY_CATEGORY = gql`
   query ItemsByCategory($title: String!) {

@@ -8,9 +8,29 @@ type Item {
 }
 
 input ItemsParams {
-  ids: [String!]
+  ids: [Int!]
+}
+
+type CartItem {
+  id: Int!
+  item: Item!
+  quantity: Int!
+  total: String!
+}
+
+type Cart {
+  items: [CartItem!]!
+  total: String!
+}
+
+type Category {
+  title: String!
+  items: [Item!]!
 }
 
 type Query {
   items(params: ItemsParams): [Item!]!
+  cart: Cart!
+  categories: [Category!]!
+  category(title: String!): Category
 }
