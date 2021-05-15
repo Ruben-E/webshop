@@ -24,7 +24,8 @@
       "@webshop/utils": ["utils"],
       "@webshop/config": ["config"],
       "@webshop/requests": ["requests"],
-      "@webshop/data": ["data"]
+      "@webshop/data": ["data"],
+      "@webshop/graphql": ["../.generated"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

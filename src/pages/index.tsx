@@ -2,34 +2,38 @@ import React, { useEffect, useState } from "react";
 import { ClientItem, RemoteCartItem, RequestState } from "@webshop/models";
 import { HomePage } from "@webshop/pages";
 import { normalize } from "@webshop/utils";
-import {
-  addItemToCartRequest,
-  getCartRequest,
-  getItemsRequest,
-} from "@webshop/requests";
+import { addItemToCartRequest, getCartRequest } from "@webshop/requests";
+import { gql, useQuery } from "@apollo/client";
+import { GQLItem } from "@webshop/graphql";
 
-const ITEM_LIMIT = 6;
+const ITEMS = gql`
+  query Items {
+    items {
+      id
+      title
+      price
+      description
+      image
+      category
+    }
+  }
+`;
 
 export default function Index() {
   const [itemsState, setItemsState] = useState<RequestState<ClientItem[]>>({
     loading: true,
   });
 
+  const items = useQuery<Record<"items", GQLItem[]>>(ITEMS);
   /**
    * Get items from server
    */
   useEffect(() => {
-    (async () => {
-      try {
-        const items = await getItemsRequest({
-          limit: ITEM_LIMIT,
-        });
-        setItemsState({ loading: false, data: items });
-      } catch (error) {
-        setItemsState({ loading: false, error });
-      }
-    })();
-  }, []);
+    setItemsState({
+      ...items,
+      data: items.data?.items,
+    });
+  }, [items.data]);
 
   const [cartState, setCartState] = useState<RequestState<RemoteCartItem[]>>({
     loading: true,

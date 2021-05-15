@@ -1,0 +1,16 @@
+type Item {
+  id: Int!
+  title: String!
+  description: String!
+  image: String!
+  price: Float!
+  category: String!
+}
+
+input ItemsParams {
+  ids: [String!]
+}
+
+type Query {
+  items(params: ItemsParams): [Item!]!
+}

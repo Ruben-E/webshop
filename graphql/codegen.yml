@@ -1,0 +1,9 @@
+schema: "./schema.graphql"
+overwrite: true
+generates:
+  ./.generated/index.ts:
+    plugins:
+      - typescript
+      - typescript-resolvers
+    config:
+      typesPrefix: GQL

@@ -6,16 +6,23 @@ import React from "react";
 import { Navigation } from "@webshop/organisms";
 import { NAVIGATION } from "@webshop/config";
 import { MainLayout } from "@webshop/templates";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 export interface PageProps {
   currentRoute: string;
 }
 
 function MyApp({ Component, pageProps, router }: AppProps) {
+  const client = new ApolloClient({
+    uri: "http://localhost:4000/\n",
+    cache: new InMemoryCache(),
+  });
   return (
     <ThemeProvider theme={defaultTheme}>
       <AppLayout currentRoute={router.asPath}>
-        <Component {...pageProps} />
+        <ApolloProvider client={client}>
+          <Component {...pageProps} />
+        </ApolloProvider>
       </AppLayout>
     </ThemeProvider>
   );

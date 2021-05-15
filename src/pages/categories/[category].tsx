@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import { CategoryPage } from "@webshop/pages";
 import { ClientItem, RemoteCartItem, RequestState } from "@webshop/models";
 import { NextPageContext } from "next";
-import {
-  addItemToCartRequest,
-  getCartRequest,
-  getItemsByCategoryRequest,
-} from "@webshop/requests";
+import { addItemToCartRequest, getCartRequest } from "@webshop/requests";
 import { normalize } from "@webshop/utils";
+import { gql, useQuery } from "@apollo/client";
+import { GQLCategory } from "@webshop/graphql";
 
 const QUERY_PARAM_NAME = "category";
 
@@ -16,7 +14,32 @@ interface CategoryInitialProps {
 }
 const ITEM_LIMIT = 6;
 
+const ITEMS_BY_CATEGORY = gql`
+  query ItemsByCategory($title: String!) {
+    category(title: $title) {
+      title
+      items {
+        id
+        title
+        price
+        description
+        image
+        category
+      }
+    }
+  }
+`;
+
 export default function Category({ category }: CategoryInitialProps) {
+  const itemsByCategoryState = useQuery<Record<"category", GQLCategory>>(
+    ITEMS_BY_CATEGORY,
+    {
+      variables: {
+        title: category,
+      },
+    }
+  );
+
   const [itemsState, setItemsState] = useState<RequestState<ClientItem[]>>({
     loading: true,
   });
@@ -29,18 +52,13 @@ export default function Category({ category }: CategoryInitialProps) {
    * Get items from server
    */
   useEffect(() => {
-    (async () => {
-      try {
-        const items = await getItemsByCategoryRequest({
-          category,
-          limit: ITEM_LIMIT,
-        });
-        setItemsState({ loading: false, data: items });
-      } catch (error) {
-        setItemsState({ loading: false, error });
-      }
-    })();
-  }, []);
+    if (itemsByCategoryState.data) {
+      setItemsState({
+        loading: false,
+        data: itemsByCategoryState.data.category.items,
+      });
+    }
+  }, [itemsByCategoryState.data]);
 
   /**
    * Get cart from server
