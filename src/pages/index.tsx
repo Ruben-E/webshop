@@ -1,56 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { ClientItem } from "@webshop/models";
+import React from "react";
 import { HomePage } from "@webshop/pages";
-import { normalize } from "@webshop/utils";
 import {
   ItemsDocument,
   useAddToCartMutation,
-  useCartItemIdsQuery,
   useItemsQuery,
 } from "@webshop/graphql";
 import { initializeApollo } from "./_app";
+import gql from "graphql-tag";
 
 export default function Index() {
-  const [items, setItems] = useState<ClientItem[]>([]);
-
   const itemsQuery = useItemsQuery();
-  /**
-   * Get items from server
-   */
-  useEffect(() => {
-    setItems(itemsQuery.data?.items || []);
-  }, [itemsQuery.data]);
-
-  const cartItemIdsQuery = useCartItemIdsQuery();
-
-  /**
-   * Enrich remote item to client item.
-   */
-  useEffect(() => {
-    const items = itemsQuery.data?.items;
-    const cart = cartItemIdsQuery.data?.cart?.items;
-    if (!items || !cart) {
-      return;
-    }
-
-    const normalizedCart = normalize(cart);
-    const updatedItems = items.map((item) => {
-      const inCart = normalizedCart[item.id] !== undefined;
-      if (inCart) {
-        return {
-          ...item,
-          inCart: true,
-          quantity: normalizedCart[item.id].quantity,
-        };
-      } else {
-        return {
-          ...item,
-          inCart: false,
-        };
-      }
-    });
-    setItems(updatedItems);
-  }, [itemsQuery.data, cartItemIdsQuery.data]);
 
   const [addToCartMutation] = useAddToCartMutation();
 
@@ -62,7 +21,17 @@ export default function Index() {
       try {
         await addToCartMutation({
           variables: { id, quantity },
-          refetchQueries: ["CartItemIds"],
+          refetchQueries: [
+            {
+              query: gql`
+                query AmountInCart {
+                  items {
+                    amountInCart
+                  }
+                }
+              `,
+            },
+          ],
         });
       } catch (error) {
         console.error("Add item to cart failed", error);
@@ -75,7 +44,7 @@ export default function Index() {
       addToCart={addToCart}
       itemsState={{
         loading: itemsQuery.loading,
-        data: items,
+        data: itemsQuery.data?.items,
         error: itemsQuery.error,
       }}
     />

@@ -44,6 +44,8 @@ const resolvers: GQLResolvers<ServerContext> = {
   },
   Item: {
     price: (item, _, { pricesService }) => pricesService.getById(item.id),
+    amountInCart: (item, _, { cartService }) =>
+      cartService.getQuantity(item.id),
   },
   CartItem: {
     item: ({ id }, _, { itemsService }) => itemsService.getById(id),

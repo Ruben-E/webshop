@@ -3,7 +3,7 @@ import { FaCartPlus, FaShoppingCart } from "react-icons/fa";
 import React, { useState } from "react";
 import { Item, QuantityInput } from "@webshop/molecules";
 import { ClientItem } from "@webshop/models";
-import { ButtonIcon, Spinner } from "@webshop/atoms";
+import { ButtonIcon } from "@webshop/atoms";
 import Link from "next/link";
 
 interface ItemProps {
@@ -14,7 +14,9 @@ export const ItemResult: React.FunctionComponent<ItemProps> = ({
   item,
   onAddToCart,
 }) => {
-  const [quantity, setQuantity] = useState(item.quantity || 1);
+  const [quantity, setQuantity] = useState(
+    item.amountInCart === 0 ? 1 : item.amountInCart
+  );
 
   const addToCart = () => {
     onAddToCart(item.id, quantity);
@@ -22,41 +24,38 @@ export const ItemResult: React.FunctionComponent<ItemProps> = ({
   return (
     <ItemContainer>
       <Item item={item} />
-      {item.inCart === undefined ? (
-        <Spinner style={{ flex: 1 }}>Loading cart info</Spinner>
-      ) : (
-        <ItemActions>
-          <div style={{ width: "128px" }}>
-            <QuantityInput
-              quantity={item.inCart ? item.quantity || quantity : quantity}
-              onChange={setQuantity}
-              disabled={item.inCart}
-            />
-          </div>
-          {!item.inCart ? (
-            <ButtonIcon
-              icon={<FaCartPlus />}
-              category={"primary"}
-              disabled={quantity === 0}
-              onClick={addToCart}
-              style={{ flex: 1 }}
-            />
-          ) : (
-            <Link href={"/cart"} passHref={true}>
-              <a style={{ display: "flex", flex: 1 }}>
-                <ButtonIcon
-                  icon={<FaShoppingCart />}
-                  category={"secondary"}
-                  position={"right"}
-                  style={{ flex: 1 }}
-                >
-                  Go to cart
-                </ButtonIcon>
-              </a>
-            </Link>
-          )}
-        </ItemActions>
-      )}
+
+      <ItemActions>
+        <div style={{ width: "128px" }}>
+          <QuantityInput
+            quantity={quantity}
+            onChange={setQuantity}
+            disabled={item.amountInCart > 0}
+          />
+        </div>
+        {item.amountInCart === 0 ? (
+          <ButtonIcon
+            icon={<FaCartPlus />}
+            category={"primary"}
+            disabled={quantity === 0}
+            onClick={addToCart}
+            style={{ flex: 1 }}
+          />
+        ) : (
+          <Link href={"/cart"} passHref={true}>
+            <a style={{ display: "flex", flex: 1 }}>
+              <ButtonIcon
+                icon={<FaShoppingCart />}
+                category={"secondary"}
+                position={"right"}
+                style={{ flex: 1 }}
+              >
+                Go to cart
+              </ButtonIcon>
+            </a>
+          </Link>
+        )}
+      </ItemActions>
     </ItemContainer>
   );
 };
