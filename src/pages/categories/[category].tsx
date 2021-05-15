@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import { CategoryPage } from "@webshop/pages";
 import { ClientItem } from "@webshop/models";
 import { NextPageContext } from "next";
-import { addItemToCartRequest } from "@webshop/requests";
 import { normalize } from "@webshop/utils";
-import { useCartItemIdsQuery, useItemsByCategoryQuery } from "@webshop/graphql";
+import {
+  useAddToCartMutation,
+  useCartItemIdsQuery,
+  useItemsByCategoryQuery,
+} from "@webshop/graphql";
+import gql from "graphql-tag";
 
 const QUERY_PARAM_NAME = "category";
 
@@ -58,29 +62,43 @@ export default function Category({ category }: CategoryInitialProps) {
     setItems(updatedItems);
   }, [itemsByCategoryQuery.data, cartItemIdsQuery.data]);
 
+  const [addToCartMutation] = useAddToCartMutation();
   /**
    * Add item to cart remotely and update local state accordingly.
    */
   const addToCart = (id: number, quantity: number) => {
     (async () => {
       try {
-        await addItemToCartRequest(id, quantity);
-        const updatedItems = items.map((item) =>
-          item.id !== id
-            ? item
-            : {
-                ...item,
-                inCart: true,
-                quantity,
-              }
-        );
-        setItems(updatedItems);
+        await addToCartMutation({
+          variables: { id, quantity },
+          update: (cache) =>
+            cache.writeQuery({
+              query: gql`
+                query CartItemUpdate {
+                  cart {
+                    items {
+                      id
+                      quantity
+                    }
+                  }
+                }
+              `,
+              data: {
+                cart: {
+                  __typename: "Cart",
+                  items: [
+                    ...cartItemIdsQuery.data!.cart.items,
+                    { id, quantity },
+                  ],
+                },
+              },
+            }),
+        });
       } catch (error) {
         console.error("Add item to cart failed", error);
       }
     })();
   };
-
   return (
     <CategoryPage
       category={{ title: category }}

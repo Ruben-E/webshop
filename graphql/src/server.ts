@@ -14,8 +14,21 @@ const typeDefs = gql`
 `;
 
 const resolvers: GQLResolvers<ServerContext> = {
+  Mutation: {
+    addToCart: async (_, { params }, { cartService }) => {
+      await cartService.add(params);
+      return {
+        ...params,
+        item: undefined,
+        total: "",
+      };
+    },
+  },
   Query: {
-    items: (_, { params }, { itemsService }) => itemsService.get(params),
+    items: (_, { params }, { itemsService }) => {
+      console.debug("Queried items");
+      return itemsService.get(params);
+    },
     cart: async (_, {}, { cartService }) => ({
       items: await cartService.getItems(),
       total: "",

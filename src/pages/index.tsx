@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import { ClientItem } from "@webshop/models";
 import { HomePage } from "@webshop/pages";
 import { normalize } from "@webshop/utils";
-import { addItemToCartRequest } from "@webshop/requests";
-import { useCartItemIdsQuery, useItemsQuery } from "@webshop/graphql";
+import {
+  ItemsDocument,
+  useAddToCartMutation,
+  useCartItemIdsQuery,
+  useItemsQuery,
+} from "@webshop/graphql";
+import { initializeApollo } from "./_app";
 
 export default function Index() {
   const [items, setItems] = useState<ClientItem[]>([]);
@@ -47,24 +52,18 @@ export default function Index() {
     setItems(updatedItems);
   }, [itemsQuery.data, cartItemIdsQuery.data]);
 
+  const [addToCartMutation] = useAddToCartMutation();
+
   /**
    * Add item to cart remotely and update local state accordingly.
    */
   const addToCart = (id: number, quantity: number) => {
     (async () => {
       try {
-        await addItemToCartRequest(id, quantity);
-        setItems(
-          items.map((item) =>
-            item.id !== id
-              ? item
-              : {
-                  ...item,
-                  inCart: true,
-                  quantity,
-                }
-          )
-        );
+        await addToCartMutation({
+          variables: { id, quantity },
+          refetchQueries: ["CartItemIds"],
+        });
       } catch (error) {
         console.error("Add item to cart failed", error);
       }
@@ -81,4 +80,16 @@ export default function Index() {
       }}
     />
   );
+}
+
+export async function getStaticProps() {
+  const apolloClient = initializeApollo();
+  await apolloClient.query({
+    query: ItemsDocument,
+  });
+  return {
+    props: {
+      initialApolloState: apolloClient.cache.extract(),
+    },
+  };
 }

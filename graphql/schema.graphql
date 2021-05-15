@@ -34,3 +34,12 @@ type Query {
   categories: [Category!]!
   category(title: String!): Category
 }
+
+input AddToCartParams {
+  id: Int!
+  quantity: Int!
+}
+
+type Mutation {
+  addToCart(params: AddToCartParams): CartItem!
+}
