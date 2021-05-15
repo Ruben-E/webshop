@@ -109,7 +109,7 @@ export default function Category({ category }: CategoryInitialProps) {
 
   return (
     <CategoryPage
-      category={category as string}
+      category={{ title: category }}
       itemsState={itemsState}
       addToCart={addToCart}
     />

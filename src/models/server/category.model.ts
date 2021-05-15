@@ -1,1 +1,3 @@
-export type Category = string;
+export interface Category {
+    title: string;
+}

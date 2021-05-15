@@ -16,9 +16,9 @@ export const CategoriesPage: React.FunctionComponent<CategoriesProps> = ({
     <p style={{ alignSelf: "center" }}>Error</p>
   ) : data ? (
     <List>
-      {data.map((category) => (
-        <li key={`category--${category}`}>
-          <Link href={`/categories/${category}`}>{category}</Link>
+      {data.map(({ title }) => (
+        <li key={`category--${title}`}>
+          <Link href={`/categories/${title}`}>{title}</Link>
         </li>
       ))}
     </List>

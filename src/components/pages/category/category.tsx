@@ -22,7 +22,7 @@ export const CategoryPage: React.FunctionComponent<CategoryPageProps> = ({
     <p style={{ alignSelf: "center" }}>Error</p>
   ) : data ? (
     <section>
-      <Title style={{ textAlign: "center" }}>{category}</Title>
+      <Title style={{ textAlign: "center" }}>{category.title}</Title>
       <Divider />
       <List>
         {data.map((item) => (

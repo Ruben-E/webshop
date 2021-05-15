@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { CategoriesPage } from "@webshop/pages";
 import { getCategoriesRequest } from "@webshop/requests";
-import { RequestState } from "@webshop/models";
+import { Category, RequestState } from "@webshop/models";
 
 export default function Categories() {
   const [categoriesState, setCategoriesState] = useState<
-    RequestState<string[]>
+    RequestState<Category[]>
   >({ loading: true });
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export default function Categories() {
         const categories = await getCategoriesRequest();
         setCategoriesState({
           loading: false,
-          data: categories,
+          data: categories.map((title: string) => ({ title })),
         });
       } catch (error) {
         setCategoriesState({
