@@ -28,9 +28,8 @@ export const noop = () => {};
   <Story name="2 items" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <CategoryPage
-        category={"Category 1"}
+        category={{ title: "Category 1" }}
         addToCart={noop}
-        cart={{}}
         itemsState={{ loading: false, data: ITEMS.slice(0, 2) }}
       />
     </AppLayout>
@@ -43,9 +42,8 @@ export const noop = () => {};
   <Story name="6 items" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <CategoryPage
-        category={"Category 1"}
+        category={{ title: "Category 1" }}
         addToCart={noop}
-        cart={{}}
         itemsState={{ loading: false, data: ITEMS.slice(0, 6) }}
       />
     </AppLayout>
@@ -58,10 +56,9 @@ export const noop = () => {};
   <Story name="Loading" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <CategoryPage
-        category={"Category 1"}
+        category={{ title: "Category 1" }}
         addToCart={noop}
         itemsState={{ loading: true }}
-        cart={{}}
       />
     </AppLayout>
   </Story>
@@ -73,10 +70,9 @@ export const noop = () => {};
   <Story name="Error" height={"480px"}>
     <AppLayout currentRoute={"/"}>
       <CategoryPage
-        category={"Category 1"}
+        category={{ title: "Category 1" }}
         addToCart={noop}
         itemsState={{ error: new Error("Something went wrong") }}
-        cart={{}}
       />
     </AppLayout>
   </Story>
