@@ -2,13 +2,7 @@ query ItemsByCategory($title: String!) {
   category(title: $title) {
     title
     items {
-      id
-      title
-      price
-      description
-      image
-      category
-        amountInCart
+      ...DisplayedItem
     }
   }
 }

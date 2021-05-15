@@ -1,0 +1,9 @@
+fragment DisplayedItem on Item {
+  id
+  title
+  price
+  description
+  image
+  category
+  amountInCart
+}
