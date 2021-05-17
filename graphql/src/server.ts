@@ -19,6 +19,7 @@ const resolvers: GQLResolvers<ServerContext> = {
      * @return string | Promise<string>
      */
     hello: (_, __, context) => "world",
+    items: (_, __, { itemsService }) => itemsService.get(),
   },
 };
 

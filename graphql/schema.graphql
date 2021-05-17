@@ -1,3 +1,13 @@
+type Item {
+  id: Int!
+  title: String!
+  description: String!
+  image: String!
+  price: Float!
+  category: String!
+}
+
 type Query {
-    hello: String!
+  hello: String!
+  items: [Item!]!
 }
