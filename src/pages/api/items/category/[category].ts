@@ -1,21 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ITEMS, NORMALIZED_ITEMS } from "@webshop/data";
+import { ITEMS, NORMALIZED_CATEGORIES } from "@webshop/data";
 import { RemoteItem } from "@webshop/models";
 import { paginate } from "@webshop/utils";
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const category = req.query.category as string;
+
+  if (NORMALIZED_CATEGORIES[category] === undefined) {
+    res.status(404).end();
+    return;
+  }
+
   switch (req.method) {
     case "GET": {
-      let items: RemoteItem[];
-      const ids = req.query.ids as string;
-      /**
-       * Support batch by ids call
-       */
-      if (ids) {
-        items = ids.split(",").map((id) => NORMALIZED_ITEMS[id]);
-      } else {
-        items = ITEMS.slice(0);
-      }
+      const items: RemoteItem[] = ITEMS.filter(
+        (item) => item.category === category
+      );
 
       const page = parseInt(req.query.page as string);
       const size = parseInt(req.query.size as string);
@@ -32,7 +32,11 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 
       res.status(200).json(response);
 
-      console.debug(`/api/items returned`, response.content.length, "items");
+      console.debug(
+        `/api/items/category/${category} returned`,
+        response.content.length,
+        "items"
+      );
       break;
     }
     default: {

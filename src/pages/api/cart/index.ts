@@ -14,7 +14,7 @@ export const CART: Cart = {
   "1": 2,
 };
 
-const CART_PERFORMANCE_DELAY = 1000;
+const PERFORMANCE_DELAY = 1000;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -25,7 +25,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         total: numeral(PRICES[key]).multiply(CART[key]).format("0,0.00"),
       }));
 
-      // await delay(CART_PERFORMANCE_DELAY);
+      // await delay(PERFORMANCE_DELAY);
 
       res.status(200).json(cartAsArray);
       break;

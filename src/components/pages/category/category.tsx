@@ -1,9 +1,8 @@
-import { Category, RequestState } from "@webshop/models";
+import { Category, ClientItem, RequestState } from "@webshop/models";
 import React from "react";
 import { ItemResult } from "@webshop/organisms";
 import { Divider, Spinner, Title } from "@webshop/atoms";
 import { List } from "@webshop/molecules";
-import { ClientItem } from "@webshop/models";
 
 interface CategoryPageProps {
   category: Category;

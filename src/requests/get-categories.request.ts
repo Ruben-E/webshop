@@ -1,4 +1,2 @@
 export const getCategoriesRequest = () =>
-  fetch(`https://fakestoreapi.com/products/categories`).then((res) =>
-    res.json()
-  );
+  fetch(`/api/items/categories`).then((res) => res.json());

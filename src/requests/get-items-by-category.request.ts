@@ -1,16 +1,17 @@
-import { toQueryParams } from "@webshop/utils";
-import { RemoteGetItemsParams } from "./get-items.request";
+import { Paged, toQueryParams } from "@webshop/utils";
+import { Paging, RemoteItem } from "@webshop/models";
 
-interface RemoteGetItemsByCategoryParams extends RemoteGetItemsParams {
+interface RemoteGetItemsByCategoryParams {
   category: string;
+  paging?: Paging;
 }
 
 export const getItemsByCategoryRequest = ({
   category,
-  ...params
-}: RemoteGetItemsByCategoryParams) =>
+  paging,
+}: RemoteGetItemsByCategoryParams): Promise<Paged<RemoteItem>> =>
   fetch(
-    `https://fakestoreapi.com/products/category/${category}${toQueryParams(
-      params
+    `/api/items/category/${category}${toQueryParams(
+      paging || {}
     )}`
   ).then((res) => res.json());
