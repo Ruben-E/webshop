@@ -7,7 +7,19 @@ type Item {
   category: String!
 }
 
+type PagedItems {
+  content: [Item!]!
+  size: Int!
+  page: Int!
+  totalResults: Int!
+}
+
+input PagingParams {
+  page: Int!
+  size: Int!
+}
+
 type Query {
   hello: String!
-  items: [Item!]!
+  items(paging: PagingParams!): PagedItems!
 }
