@@ -3,6 +3,7 @@ import * as fs from "fs";
 import { GQLResolvers } from "../.generated";
 import { ServerContext } from "./models/context.model";
 import { ItemsService } from "./services/items.service";
+import { PricesService } from "./services/prices.service";
 
 const schema = fs.readFileSync("./schema.graphql");
 
@@ -20,7 +21,7 @@ const resolvers: GQLResolvers<ServerContext> = {
      */
     hello: (_, __, context) => "world",
     items: (_, { paging }, { itemsService }) => itemsService.get(paging),
-  },
+  }
 };
 
 const server = new ApolloServer({
@@ -28,6 +29,7 @@ const server = new ApolloServer({
   resolvers,
   context: (): ServerContext => ({
     itemsService: new ItemsService(),
+    pricesService: new PricesService(),
   }),
 });
 
