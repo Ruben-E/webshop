@@ -7,3 +7,4 @@ export * from "./client/client-item.model";
 export * from "./client/navigation.model";
 export * from "./client/request-state.model";
 export * from "./client/cart-item.model";
+export * from "./client/paged.model";

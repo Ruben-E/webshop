@@ -2,16 +2,20 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { CART } from "./index";
 import numeral from "numeral";
 import { PRICES } from "@webshop/data";
-import { delay } from "@webshop/utils";
 
-export const CART_PERFORMANCE_DELAY = 1000;
+export const PERFORMANCE_DELAY = 1000;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const id = req.query.id as string;
 
+  if (CART[id] === undefined) {
+    res.status(404).end();
+    return;
+  }
+
   switch (req.method) {
     case "GET": {
-      await delay(CART_PERFORMANCE_DELAY);
+      // await delay(PERFORMANCE_DELAY);
       res.status(200).json({
         id,
         quantity: CART[id],
@@ -28,7 +32,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (CART[id] === undefined) {
         res.status(404).end();
       } else {
-        CART[id] = req.body.quantity;
+        const quantity = req.body.quantity;
+        if (quantity) {
+          CART[id] = req.body.quantity;
+        }
         res.status(204).end();
       }
       break;

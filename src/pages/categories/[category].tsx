@@ -14,7 +14,11 @@ const QUERY_PARAM_NAME = "category";
 interface CategoryInitialProps {
   category: string;
 }
-const ITEM_LIMIT = 6;
+
+const PAGING = {
+  page: 0,
+  size: 6,
+};
 
 export default function Category({ category }: CategoryInitialProps) {
   const [itemsState, setItemsState] = useState<RequestState<ClientItem[]>>({
@@ -33,9 +37,9 @@ export default function Category({ category }: CategoryInitialProps) {
       try {
         const items = await getItemsByCategoryRequest({
           category,
-          limit: ITEM_LIMIT,
+          paging: PAGING,
         });
-        setItemsState({ loading: false, data: items });
+        setItemsState({ loading: false, data: items.content });
       } catch (error) {
         setItemsState({ loading: false, error });
       }

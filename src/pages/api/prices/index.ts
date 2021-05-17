@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PRICES } from "@webshop/data";
 import { delay } from "@webshop/utils";
 
+const PERFORMANCE_DELAY = 2000;
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET": {
@@ -12,7 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       } else {
         prices = Object.keys(PRICES).map((id) => PRICES[id.toString()]);
       }
-      await delay(2000);
+      // await delay(PERFORMANCE_DELAY);
       res.status(200).json(prices);
       console.debug("/api/prices returned", prices.length, "prices");
       break;
