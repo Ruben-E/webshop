@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { FaCartPlus, FaShoppingCart } from "react-icons/fa";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Item, QuantityInput } from "@webshop/molecules";
 import { ClientItem } from "@webshop/models";
 import { ButtonIcon } from "@webshop/atoms";
@@ -14,11 +14,13 @@ export const ItemResult: React.FunctionComponent<ItemProps> = ({
   item,
   onAddToCart,
 }) => {
-  const [quantity, setQuantity] = useState(
-    item.amountInCart === undefined || item.amountInCart === 0
-      ? 1
-      : item.amountInCart
-  );
+  const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    if (item.amountInCart && item.amountInCart !== 1) {
+      setQuantity(item.amountInCart);
+    }
+  }, [item.amountInCart]);
 
   const addToCart = () => {
     onAddToCart(item.id, quantity);
