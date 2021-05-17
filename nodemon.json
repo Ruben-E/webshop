@@ -1,0 +1,5 @@
+{
+  "watch": ["graphql"],
+  "ext": "ts",
+  "exec": "cd graphql && ts-node ./src/server.ts"
+}
