@@ -26,7 +26,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         total: numeral(PRICES[key]).multiply(CART[key]).format("0,0.00"),
       }));
 
-      await delay(CART_PERFORMANCE_DELAY);
+      // await delay(CART_PERFORMANCE_DELAY);
 
       res.status(200).json(cartAsArray);
       break;

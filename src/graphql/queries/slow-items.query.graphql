@@ -1,0 +1,9 @@
+query SlowItems($page: Int!, $size: Int!) {
+  items(params: { page: $page, size: $size }) {
+    content {
+      id
+      price
+      amountInCart
+    }
+  }
+}

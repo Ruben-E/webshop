@@ -3,6 +3,6 @@ export interface RemoteItem {
   title: string;
   description: string;
   image: string;
-  price: number;
+  price?: number;
   category: string;
 }

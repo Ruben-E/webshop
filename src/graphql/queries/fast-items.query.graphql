@@ -1,0 +1,11 @@
+query FastItems($page: Int!, $size: Int!) {
+  items(params: { page: $page, size: $size }) {
+    content {
+      id
+      title
+      description
+      category
+      image
+    }
+  }
+}

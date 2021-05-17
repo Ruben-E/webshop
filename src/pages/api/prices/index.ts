@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ITEMS, NORMALIZED_ITEMS, PRICES } from "@webshop/data";
-import { RemoteItem } from "@webshop/models";
+import { PRICES } from "@webshop/data";
+import { delay } from "@webshop/utils";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
@@ -12,8 +12,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       } else {
         prices = Object.keys(PRICES).map((id) => PRICES[id.toString()]);
       }
+      await delay(2000);
       res.status(200).json(prices);
-      console.debug("/api/prices returned", prices.length, 'prices');
+      console.debug("/api/prices returned", prices.length, "prices");
       break;
     }
     default: {

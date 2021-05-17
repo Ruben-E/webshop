@@ -3,6 +3,9 @@ import fetch from "node-fetch";
 import { toQueryParams } from "../../../src/utils";
 import DataLoader from "dataloader";
 
+interface GetItemsParams extends Partial<GQLItemsParams> {
+  ids?: number[];
+}
 export class ItemsService {
   private itemDataLoader = new DataLoader<number, GQLItem>(
     async (ids: number[]) =>
@@ -15,7 +18,7 @@ export class ItemsService {
         : this.get({ ids }).then((data) => data.content)
   );
 
-  async get({ ids, page, size }: GQLItemsParams = {}): Promise<GQLPagedItems> {
+  async get({ ids, page, size }: GetItemsParams): Promise<GQLPagedItems> {
     return fetch(
       `http://localhost:3000/api/items${toQueryParams({
         ids: ids?.join(","),

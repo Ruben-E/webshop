@@ -1,20 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HomePage } from "@webshop/pages";
 import {
-  ItemsDocument,
+  FastItemsDocument,
+  GQLItemsParams,
+  SlowItemsDocument,
   useAddToCartMutation,
-  useItemsQuery,
+  useFastItemsQuery,
+  useSlowItemsQuery,
 } from "@webshop/graphql";
-import { initializeApollo } from "./_app";
 import gql from "graphql-tag";
+import { ClientItem } from "@webshop/models";
+import { normalize } from "@webshop/utils";
+import { initializeApollo } from "./_app";
+
+const PAGING: GQLItemsParams = {
+  size: 6,
+  page: 0,
+};
 
 export default function Index() {
-  const itemsQuery = useItemsQuery({
-    variables: {
-      size: 6,
-      page: 0,
-    },
+  const [items, setItems] = useState<ClientItem[]>([]);
+
+  const fastItemsQuery = useFastItemsQuery({
+    variables: PAGING,
   });
+
+  const slowItemsQuery = useSlowItemsQuery({
+    variables: PAGING,
+  });
+
+  const fastItems = fastItemsQuery.data;
+  const slowItems = slowItemsQuery.data;
+
+  useEffect(() => {
+    if (fastItems) {
+      setItems(fastItems.items.content);
+    }
+  }, [fastItems]);
+
+  useEffect(() => {
+    if (fastItems && slowItems) {
+      const slowUpdates = normalize(slowItems.items.content);
+      setItems((items) =>
+        items.map((item) => ({
+          ...item,
+          ...(slowUpdates[item.id] || {}),
+        }))
+      );
+    }
+  }, [fastItems, slowItems]);
 
   const [addToCartMutation] = useAddToCartMutation();
 
@@ -26,20 +60,7 @@ export default function Index() {
       try {
         await addToCartMutation({
           variables: { id, quantity },
-          refetchQueries: [
-            {
-              query: gql`
-                query AmountInCart {
-                  items(params: { page: 0, size: 6 }) {
-                    content {
-                      id
-                      amountInCart
-                    }
-                  }
-                }
-              `,
-            },
-          ],
+          refetchQueries: ["SlowItems"],
         });
       } catch (error) {
         console.error("Add item to cart failed", error);
@@ -51,26 +72,29 @@ export default function Index() {
     <HomePage
       addToCart={addToCart}
       itemsState={{
-        loading: itemsQuery.loading,
-        data: itemsQuery.data?.items.content,
-        error: itemsQuery.error,
+        loading: fastItemsQuery.loading,
+        data: items,
+        error: fastItemsQuery.error,
       }}
     />
   );
 }
 
-export async function getStaticProps() {
-  const apolloClient = initializeApollo();
-  await apolloClient.query({
-    query: ItemsDocument,
-    variables: {
-      page: 0,
-      size: 6,
-    },
-  });
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract(),
-    },
-  };
-}
+// /**
+//  * Get fast items server-side
+//  */
+// export async function getStaticProps() {
+//   const apolloClient = initializeApollo();
+//   await apolloClient.query({
+//     query: FastItemsDocument,
+//     variables: {
+//       page: 0,
+//       size: 6,
+//     },
+//   });
+//   return {
+//     props: {
+//       initialApolloState: apolloClient.cache.extract(),
+//     },
+//   };
+// }

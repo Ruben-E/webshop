@@ -17,8 +17,8 @@ type PagedItems {
 
 input ItemsParams {
   ids: [Int!]
-  page: Int
-  size: Int
+  page: Int!
+  size: Int!
 }
 
 type CartItem {

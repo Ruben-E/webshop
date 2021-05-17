@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "GET": {
-      await delay(CART_PERFORMANCE_DELAY);
+      // await delay(CART_PERFORMANCE_DELAY);
       res.status(200).json({
         id,
         quantity: CART[id],
