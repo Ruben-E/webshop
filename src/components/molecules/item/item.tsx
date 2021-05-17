@@ -18,7 +18,7 @@ export const Item: React.FunctionComponent<ItemProps> = ({ item }) => (
         {item.title}
       </ItemTitle>
       <Subtitle>
-        $9.25&nbsp; | &nbsp;
+        ${(item.price && item.price.toFixed(2)) || "?"}&nbsp; | &nbsp;
         <Link href="/login">{item.category}</Link>
       </Subtitle>
       <ItemDescription truncate={3}>{item.description}</ItemDescription>

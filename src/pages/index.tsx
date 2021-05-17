@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { ClientItem, RemoteCartItem, RequestState } from "@webshop/models";
+import {
+  ClientItem,
+  Paging,
+  RemoteCartItem,
+  RequestState,
+} from "@webshop/models";
 import { HomePage } from "@webshop/pages";
 import { normalize } from "@webshop/utils";
 import {
@@ -8,7 +13,10 @@ import {
   getItemsRequest,
 } from "@webshop/requests";
 
-const ITEM_LIMIT = 6;
+const PAGING: Paging = {
+  size: 6,
+  page: 0,
+};
 
 export default function Index() {
   const [itemsState, setItemsState] = useState<RequestState<ClientItem[]>>({
@@ -22,9 +30,9 @@ export default function Index() {
     (async () => {
       try {
         const items = await getItemsRequest({
-          limit: ITEM_LIMIT,
+          paging: PAGING,
         });
-        setItemsState({ loading: false, data: items });
+        setItemsState({ loading: false, data: items.content });
       } catch (error) {
         setItemsState({ loading: false, error });
       }
@@ -64,11 +72,10 @@ export default function Index() {
           ...item,
           ...(normalizedCart[item.id] !== undefined
             ? {
-                inCart: true,
-                quantity: normalizedCart[item.id].quantity,
+                amountInCart: normalizedCart[item.id].quantity,
               }
             : {
-                inCart: false,
+                amountInCart: 0,
               }),
         })),
       }));
@@ -89,8 +96,7 @@ export default function Index() {
               ? item
               : {
                   ...item,
-                  inCart: true,
-                  quantity,
+                  amountInCart: quantity,
                 }
           ),
         }));

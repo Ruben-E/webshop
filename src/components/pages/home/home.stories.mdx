@@ -23,7 +23,7 @@ import { ITEMS } from "../../../data";
 ### Loaded 2 results
 
 export const noop = () => {};
-export const CLIENT_ITEMS = ITEMS.map((item) => ({ ...item, inCart: false }));
+export const CLIENT_ITEMS = ITEMS.map((item) => ({ ...item, amountInCart: 0 }));
 
 <Canvas>
   <Story name="2 items" height={"480px"}>
@@ -54,7 +54,13 @@ export const CLIENT_ITEMS = ITEMS.map((item) => ({ ...item, inCart: false }));
 <Canvas>
   <Story name="Cart loading" height={"480px"}>
     <AppLayout currentRoute={"/"}>
-      <HomePage addToCart={noop} itemsState={{ loading: false, data: ITEMS }} />
+      <HomePage
+        addToCart={noop}
+        itemsState={{
+          loading: false,
+          data: ITEMS.map((item) => ({ ...item, price: undefined })),
+        }}
+      />
     </AppLayout>
   </Story>
 </Canvas>

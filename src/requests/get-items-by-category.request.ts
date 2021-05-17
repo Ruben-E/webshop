@@ -1,8 +1,8 @@
 import { toQueryParams } from "@webshop/utils";
-import { RemoteGetItemsParams } from "./get-items.request";
 
-interface RemoteGetItemsByCategoryParams extends RemoteGetItemsParams {
+interface RemoteGetItemsByCategoryParams {
   category: string;
+  limit?: number;
 }
 
 export const getItemsByCategoryRequest = ({

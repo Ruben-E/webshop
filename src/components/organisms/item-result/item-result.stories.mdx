@@ -25,7 +25,7 @@ export const noop = () => {};
     <ItemResult
       item={{
         ...ITEMS[0],
-        inCart: false,
+        amountInCart: 0,
       }}
       onAddToCart={noop}
     />
@@ -39,8 +39,7 @@ export const noop = () => {};
     <ItemResult
       item={{
         ...ITEMS[0],
-        inCart: true,
-        quantity: 2,
+        amountInCart: 2,
       }}
       onAddToCart={noop}
     />

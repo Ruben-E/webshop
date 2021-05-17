@@ -1,5 +1,6 @@
 import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs/blocks";
 import { ItemCart } from "./item-cart";
+import { ITEMS } from "../../../data";
 
 <Meta
   title={"Organisms/ItemCart"}
@@ -15,21 +16,30 @@ import { ItemCart } from "./item-cart";
 
 ## Stories
 
-export const ITEM = {
-  id: 1,
-  title: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-  price: 109.95,
-  description:
-    "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-  category: "men's clothing",
-  image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-  total: "",
-};
-
-### Not in cart
+### Default
 
 <Canvas>
   <Story name="Default">
-    <ItemCart item={ITEM} />
+    <ItemCart
+      item={{
+        ...ITEMS[0],
+        quantity: 2,
+        total: 219.9,
+      }}
+    />
+  </Story>
+</Canvas>
+
+### Total price loading
+
+<Canvas>
+  <Story name="Total price loading">
+    <ItemCart
+      item={{
+        ...ITEMS[0],
+        quantity: 2,
+        total: "",
+      }}
+    />
   </Story>
 </Canvas>

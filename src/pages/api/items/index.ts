@@ -6,13 +6,36 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET": {
       const ids = req.query.ids as string;
+      const page = req.query.page as string;
+      const size = req.query.size as string;
       let items: RemoteItem[];
       if (ids) {
         items = ids.split(",").map((id) => NORMALIZED_ITEMS[id]);
       } else {
-        items = ITEMS;
+        items = ITEMS.slice(0);
       }
-      res.status(200).json(items);
+      const originalSize = items.length;
+      if (page && size) {
+        const pageInt = parseInt(page);
+        const sizeInt = parseInt(size);
+        const start = pageInt * sizeInt;
+        items = items.splice(start, sizeInt);
+        res.status(200).json({
+          content: items,
+          page: pageInt,
+          size: sizeInt,
+          totalResults: originalSize,
+        });
+      } else {
+        res.status(200).json({
+          content: items,
+          page: 0,
+          size: originalSize,
+          totalResults: originalSize,
+        });
+      }
+
+      console.debug(`/api/items returned`, items.length, "items");
       break;
     }
     default: {

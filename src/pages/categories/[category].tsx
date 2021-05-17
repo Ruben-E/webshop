@@ -71,11 +71,10 @@ export default function Category({ category }: CategoryInitialProps) {
           ...item,
           ...(normalizedCart[item.id] !== undefined
             ? {
-                inCart: true,
-                quantity: normalizedCart[item.id].quantity,
+                amountInCart: normalizedCart[item.id].quantity,
               }
             : {
-                inCart: false,
+                amountInCart: 0,
               }),
         })),
       }));
@@ -96,8 +95,7 @@ export default function Category({ category }: CategoryInitialProps) {
               ? item
               : {
                   ...item,
-                  inCart: true,
-                  quantity,
+                  amountInCart: quantity,
                 }
           ),
         }));
