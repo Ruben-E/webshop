@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import numeral from "numeral";
 import { PRICES } from "@webshop/data";
-import { delay } from "@webshop/utils";
 
 /**
  * Inmemory cart

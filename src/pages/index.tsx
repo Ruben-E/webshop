@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { HomePage } from "@webshop/pages";
 import {
-  FastItemsDocument,
   GQLItemsParams,
-  SlowItemsDocument,
   useAddToCartMutation,
   useFastItemsQuery,
   useSlowItemsQuery,
 } from "@webshop/graphql";
-import gql from "graphql-tag";
 import { ClientItem } from "@webshop/models";
 import { normalize } from "@webshop/utils";
-import { initializeApollo } from "./_app";
 
 const PAGING: GQLItemsParams = {
   size: 6,

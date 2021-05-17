@@ -10,4 +10,3 @@ export const defaultTheme: DefaultTheme = {
     secondary: "#DAD2D8",
   },
 };
-

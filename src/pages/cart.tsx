@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CartItemModel, RemoteItem, RequestState } from "@webshop/models";
+import { CartItemModel, RequestState } from "@webshop/models";
 import { normalize } from "@webshop/utils";
 import {
   getCartItemRequest,

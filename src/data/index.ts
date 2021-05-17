@@ -1,2 +1,2 @@
-export * from './items.data'
-export * from './prices.data'
+export * from "./items.data";
+export * from "./prices.data";

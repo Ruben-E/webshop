@@ -1,6 +1,4 @@
 import fetch from "node-fetch";
-import DataLoader from "dataloader";
-import { toQueryParams } from "../../../src/utils";
 import { GQLCategory, GQLItem } from "../../.generated";
 
 const CATEGORY_ENDPOINT = `https://fakestoreapi.com/products/category`;

@@ -20,7 +20,8 @@ export class PricesService {
   }
 
   async getByIds(ids: number[]): Promise<number[]> {
-    return fetch(`${PRICES_ENDPOINT}?ids=${ids.join(",")}`)
-      .then((res) => res.json());
+    return fetch(`${PRICES_ENDPOINT}?ids=${ids.join(",")}`).then((res) =>
+      res.json()
+    );
   }
 }

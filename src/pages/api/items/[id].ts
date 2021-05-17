@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { NORMALIZED_ITEMS, PRICES } from "@webshop/data";
+import { NORMALIZED_ITEMS } from "@webshop/data";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const id = req.query.id as string;

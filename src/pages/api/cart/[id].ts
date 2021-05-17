@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { CART } from "./index";
 import numeral from "numeral";
 import { PRICES } from "@webshop/data";
-import { delay } from "@webshop/utils";
 
 export const CART_PERFORMANCE_DELAY = 1000;
 
