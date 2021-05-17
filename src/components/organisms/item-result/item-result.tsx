@@ -3,7 +3,7 @@ import { FaCartPlus, FaShoppingCart } from "react-icons/fa";
 import React, { useState } from "react";
 import { Item, QuantityInput } from "@webshop/molecules";
 import { ClientItem } from "@webshop/models";
-import { ButtonIcon, Spinner } from "@webshop/atoms";
+import { ButtonIcon } from "@webshop/atoms";
 import Link from "next/link";
 
 interface ItemProps {
