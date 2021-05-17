@@ -1,4 +1,9 @@
-import { Paged } from "@webshop/models";
+export interface Paged<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalResults: number;
+}
 
 export const paginate = <T>(
   collection: T[],

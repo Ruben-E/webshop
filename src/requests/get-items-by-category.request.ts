@@ -1,5 +1,5 @@
-import { toQueryParams } from "@webshop/utils";
-import { Paged, Paging, RemoteItem } from "@webshop/models";
+import { Paged, toQueryParams } from "@webshop/utils";
+import { Paging, RemoteItem } from "@webshop/models";
 
 interface RemoteGetItemsByCategoryParams {
   category: string;

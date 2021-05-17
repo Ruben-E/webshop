@@ -1,4 +1,4 @@
-import { toQueryParams } from "@webshop/utils";
+import { Paged, toQueryParams } from "@webshop/utils";
 import { ClientItem, Paging } from "@webshop/models";
 
 export interface RemoteGetItemsParams {
@@ -9,7 +9,7 @@ export interface RemoteGetItemsParams {
 export const getItemsRequest = ({
   ids,
   paging,
-}: RemoteGetItemsParams): Promise<{ content: ClientItem[] }> =>
+}: RemoteGetItemsParams): Promise<Paged<ClientItem>> =>
   fetch(
     `/api/items${toQueryParams({
       ...(paging || {}),
