@@ -21,7 +21,10 @@ const resolvers: GQLResolvers<ServerContext> = {
      */
     hello: (_, __, context) => "world",
     items: (_, { paging }, { itemsService }) => itemsService.get(paging),
-  }
+  },
+  Item: {
+    price: (item, _, { pricesService }) => pricesService.getById(item.id),
+  },
 };
 
 const server = new ApolloServer({
