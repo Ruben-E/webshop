@@ -7,11 +7,8 @@ import {
 } from "@webshop/models";
 import { HomePage } from "@webshop/pages";
 import { normalize } from "@webshop/utils";
-import {
-  addItemToCartRequest,
-  getCartRequest,
-  getItemsRequest,
-} from "@webshop/requests";
+import { addItemToCartRequest, getCartRequest } from "@webshop/requests";
+import { useItemsQuery } from "@webshop/graphql";
 
 const PAGING: Paging = {
   size: 6,
@@ -19,25 +16,19 @@ const PAGING: Paging = {
 };
 
 export default function Index() {
-  const [itemsState, setItemsState] = useState<RequestState<ClientItem[]>>({
-    loading: true,
+  const [items, setItems] = useState<ClientItem[]>([]);
+
+  const itemsQuery = useItemsQuery({
+    variables: {
+      paging: PAGING,
+    },
   });
 
-  /**
-   * Get items from server
-   */
   useEffect(() => {
-    (async () => {
-      try {
-        const items = await getItemsRequest({
-          paging: PAGING,
-        });
-        setItemsState({ loading: false, data: items.content });
-      } catch (error) {
-        setItemsState({ loading: false, error });
-      }
-    })();
-  }, []);
+    if (itemsQuery.data) {
+      setItems(itemsQuery.data.items.content);
+    }
+  }, [itemsQuery.data]);
 
   const [cartState, setCartState] = useState<RequestState<RemoteCartItem[]>>({
     loading: true,
@@ -61,14 +52,13 @@ export default function Index() {
    * Enrich remote item to client item.
    */
   useEffect(() => {
-    const items = itemsState.data;
+    const items = itemsQuery.data?.items.content;
     const cart = cartState.data;
 
     if (items && cart) {
       const normalizedCart = normalize(cart);
-      setItemsState((state) => ({
-        ...state,
-        data: state.data!.map((item) => ({
+      setItems((items) =>
+        items.map((item) => ({
           ...item,
           ...(normalizedCart[item.id] !== undefined
             ? {
@@ -77,10 +67,10 @@ export default function Index() {
             : {
                 amountInCart: 0,
               }),
-        })),
-      }));
+        }))
+      );
     }
-  }, [itemsState.data !== undefined, cartState.data !== undefined]);
+  }, [itemsQuery.data !== undefined, cartState.data !== undefined]);
 
   /**
    * Add item to cart remotely and update local state accordingly.
@@ -89,22 +79,50 @@ export default function Index() {
     (async () => {
       try {
         await addItemToCartRequest(id, quantity);
-        setItemsState((state) => ({
-          ...state,
-          data: state.data!.map((item) =>
+        setItems((items) =>
+          items.map((item) =>
             item.id !== id
               ? item
               : {
                   ...item,
                   amountInCart: quantity,
                 }
-          ),
-        }));
+          )
+        );
       } catch (error) {
         console.error("Add item to cart failed", error);
       }
     })();
   };
 
-  return <HomePage addToCart={addToCart} itemsState={itemsState} />;
+  return (
+    <HomePage
+      addToCart={addToCart}
+      itemsState={{
+        loading: itemsQuery.loading,
+        data: items,
+        error: itemsQuery.error,
+      }}
+    />
+  );
 }
+
+// export async function getStaticProps() {
+//   const apolloClient = initializeApollo();
+//
+//   await apolloClient.query({
+//     query: ItemsDocument,
+//     variables: {
+//       paging: {
+//         page: 0,
+//         size: 6,
+//       },
+//     },
+//   });
+//
+//   return {
+//     props: {
+//       initialApolloState: apolloClient.cache.extract(),
+//     },
+//   };
+// }

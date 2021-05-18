@@ -1,3 +1,12 @@
-query Example {
-    hello
+query Items($paging: PagingParams!) {
+  items(paging: $paging) {
+    content {
+      id
+      title
+      description
+      category
+      image
+      price
+    }
+  }
 }
