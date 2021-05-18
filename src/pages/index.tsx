@@ -1,7 +1,12 @@
-import React from "react";
-import { Paging } from "@webshop/models";
+import React, { useEffect, useState } from "react";
+import { ClientItem, Paging } from "@webshop/models";
 import { HomePage } from "@webshop/pages";
-import { useAddToCartMutation, useItemsQuery } from "@webshop/graphql";
+import {
+  useAddToCartMutation,
+  useFastItemsQuery,
+  useSlowItemsQuery,
+} from "@webshop/graphql";
+import { normalize } from "@webshop/utils";
 import gql from "graphql-tag";
 
 const PAGING: Paging = {
@@ -10,11 +15,36 @@ const PAGING: Paging = {
 };
 
 export default function Index() {
-  const itemsQuery = useItemsQuery({
-    variables: {
-      paging: PAGING,
-    },
+  const [items, setItems] = useState<ClientItem[]>([]);
+
+  const fastItemsQuery = useFastItemsQuery({
+    variables: PAGING,
   });
+
+  const slowItemsQuery = useSlowItemsQuery({
+    variables: PAGING,
+  });
+
+  const fastItems = fastItemsQuery.data;
+  const slowItems = slowItemsQuery.data;
+
+  useEffect(() => {
+    if (fastItems) {
+      setItems(fastItems.items.content);
+    }
+  }, [fastItems]);
+
+  useEffect(() => {
+    if (fastItems && slowItems) {
+      const slowUpdates = normalize(slowItems.items.content);
+      setItems((items) =>
+        items.map((item) => ({
+          ...item,
+          ...(slowUpdates[item.id] || {}),
+        }))
+      );
+    }
+  }, [fastItems, slowItems]);
 
   const [addToCartMutation] = useAddToCartMutation();
   /**
@@ -48,9 +78,9 @@ export default function Index() {
     <HomePage
       addToCart={addToCart}
       itemsState={{
-        loading: itemsQuery.loading,
-        data: itemsQuery.data?.items.content,
-        error: itemsQuery.error,
+        loading: fastItemsQuery.loading,
+        data: items,
+        error: fastItemsQuery.error,
       }}
     />
   );
@@ -60,7 +90,7 @@ export default function Index() {
 //   const apolloClient = initializeApollo();
 //
 //   await apolloClient.query({
-//     query: ItemsDocument,
+//     query: FastItemsDocument,
 //     variables: {
 //       paging: {
 //         page: 0,

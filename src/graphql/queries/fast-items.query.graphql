@@ -1,12 +1,11 @@
-query Items($paging: PagingParams!) {
-  items(paging: $paging) {
+query FastItems($page: Int!, $size: Int!) {
+  items(paging: { page: $page, size: $size }) {
     content {
       id
       title
       description
       category
       image
-      price
       amountInCart
     }
   }

@@ -14,7 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       } else {
         prices = Object.keys(PRICES).map((id) => PRICES[id.toString()]);
       }
-      // await delay(PERFORMANCE_DELAY);
+      await delay(PERFORMANCE_DELAY);
       res.status(200).json(prices);
       console.debug("/api/prices returned", prices.length, "prices");
       break;
