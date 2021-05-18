@@ -4,6 +4,7 @@ import { GQLResolvers } from "../.generated";
 import { ServerContext } from "./models/context.model";
 import { ItemsService } from "./services/items.service";
 import { PricesService } from "./services/prices.service";
+import { CartService } from "./services/cart.service";
 
 const schema = fs.readFileSync("./schema.graphql");
 
@@ -24,6 +25,8 @@ const resolvers: GQLResolvers<ServerContext> = {
   },
   Item: {
     price: (item, _, { pricesService }) => pricesService.getById(item.id),
+    amountInCart: (item, _, { cartService }) =>
+      cartService.getQuantity(item.id),
   },
 };
 
@@ -33,6 +36,7 @@ const server = new ApolloServer({
   context: (): ServerContext => ({
     itemsService: new ItemsService(),
     pricesService: new PricesService(),
+    cartService: new CartService(),
   }),
 });
 

@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  ClientItem,
-  Paging,
-  RemoteCartItem,
-  RequestState,
-} from "@webshop/models";
+import { ClientItem, Paging } from "@webshop/models";
 import { HomePage } from "@webshop/pages";
-import { normalize } from "@webshop/utils";
-import { addItemToCartRequest, getCartRequest } from "@webshop/requests";
+import { addItemToCartRequest } from "@webshop/requests";
 import { useItemsQuery } from "@webshop/graphql";
 
 const PAGING: Paging = {
@@ -29,48 +23,6 @@ export default function Index() {
       setItems(itemsQuery.data.items.content);
     }
   }, [itemsQuery.data]);
-
-  const [cartState, setCartState] = useState<RequestState<RemoteCartItem[]>>({
-    loading: true,
-  });
-
-  /**
-   * Get cart from server
-   */
-  useEffect(() => {
-    (async () => {
-      try {
-        const cart = await getCartRequest();
-        setCartState({ loading: false, data: cart });
-      } catch (error) {
-        setCartState({ loading: false, error });
-      }
-    })();
-  }, []);
-
-  /**
-   * Enrich remote item to client item.
-   */
-  useEffect(() => {
-    const items = itemsQuery.data?.items.content;
-    const cart = cartState.data;
-
-    if (items && cart) {
-      const normalizedCart = normalize(cart);
-      setItems((items) =>
-        items.map((item) => ({
-          ...item,
-          ...(normalizedCart[item.id] !== undefined
-            ? {
-                amountInCart: normalizedCart[item.id].quantity,
-              }
-            : {
-                amountInCart: 0,
-              }),
-        }))
-      );
-    }
-  }, [itemsQuery.data !== undefined, cartState.data !== undefined]);
 
   /**
    * Add item to cart remotely and update local state accordingly.

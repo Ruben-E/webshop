@@ -5,6 +5,7 @@ type Item {
   image: String!
   price: Float!
   category: String!
+  amountInCart: Int!
 }
 
 type PagedItems {
