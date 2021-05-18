@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { ClientItem, Paging } from "@webshop/models";
+import React from "react";
+import { Paging } from "@webshop/models";
 import { HomePage } from "@webshop/pages";
 import { useAddToCartMutation, useItemsQuery } from "@webshop/graphql";
+import gql from "graphql-tag";
 
 const PAGING: Paging = {
   size: 6,
@@ -9,19 +10,11 @@ const PAGING: Paging = {
 };
 
 export default function Index() {
-  const [items, setItems] = useState<ClientItem[]>([]);
-
   const itemsQuery = useItemsQuery({
     variables: {
       paging: PAGING,
     },
   });
-
-  useEffect(() => {
-    if (itemsQuery.data) {
-      setItems(itemsQuery.data.items.content);
-    }
-  }, [itemsQuery.data]);
 
   const [addToCartMutation] = useAddToCartMutation();
   /**
@@ -32,17 +25,19 @@ export default function Index() {
       try {
         await addToCartMutation({
           variables: { id, quantity },
-        });
-        setItems((items) =>
-          items.map((item) =>
-            item.id !== id
-              ? item
-              : {
-                  ...item,
-                  amountInCart: quantity,
+          update: (cache) =>
+            cache.writeFragment({
+              id: `Item:${id}`,
+              fragment: gql`
+                fragment UpdatedItem on Item {
+                  amountInCart
                 }
-          )
-        );
+              `,
+              data: {
+                amountInCart: quantity,
+              },
+            }),
+        });
       } catch (error) {
         console.error("Add item to cart failed", error);
       }
@@ -54,7 +49,7 @@ export default function Index() {
       addToCart={addToCart}
       itemsState={{
         loading: itemsQuery.loading,
-        data: items,
+        data: itemsQuery.data?.items.content,
         error: itemsQuery.error,
       }}
     />
