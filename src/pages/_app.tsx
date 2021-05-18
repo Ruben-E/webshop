@@ -6,18 +6,31 @@ import React from "react";
 import { Navigation } from "@webshop/organisms";
 import { NAVIGATION } from "@webshop/config";
 import { MainLayout } from "@webshop/templates";
+import { ApolloProvider } from "@apollo/client";
+import { useApollo } from "../graphql/client/client";
 
 export interface PageProps {
   currentRoute: string;
 }
 
-function MyApp({ Component, pageProps, router }: AppProps) {
+function MyApp({
+  Component,
+  pageProps: { initialApolloState, ...pageProps },
+  router,
+}: AppProps) {
+  if (initialApolloState) {
+    console.log("SSR created state");
+  }
+  const client = useApollo(initialApolloState);
+
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <AppLayout currentRoute={router.asPath}>
-        <Component {...pageProps} />
-      </AppLayout>
-    </ThemeProvider>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={defaultTheme}>
+        <AppLayout currentRoute={router.asPath}>
+          <Component {...pageProps} />
+        </AppLayout>
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }
 
