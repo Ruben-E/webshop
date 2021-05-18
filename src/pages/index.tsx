@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ClientItem, Paging } from "@webshop/models";
 import { HomePage } from "@webshop/pages";
-import { addItemToCartRequest } from "@webshop/requests";
-import { useItemsQuery } from "@webshop/graphql";
+import { useAddToCartMutation, useItemsQuery } from "@webshop/graphql";
 
 const PAGING: Paging = {
   size: 6,
@@ -24,13 +23,16 @@ export default function Index() {
     }
   }, [itemsQuery.data]);
 
+  const [addToCartMutation] = useAddToCartMutation();
   /**
    * Add item to cart remotely and update local state accordingly.
    */
   const addToCart = (id: number, quantity: number) => {
     (async () => {
       try {
-        await addItemToCartRequest(id, quantity);
+        await addToCartMutation({
+          variables: { id, quantity },
+        });
         setItems((items) =>
           items.map((item) =>
             item.id !== id

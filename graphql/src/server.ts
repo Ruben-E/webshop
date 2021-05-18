@@ -23,6 +23,10 @@ const resolvers: GQLResolvers<ServerContext> = {
     hello: (_, __, context) => "world",
     items: (_, { paging }, { itemsService }) => itemsService.get(paging),
   },
+  Mutation: {
+    addToCart: async (_, { params }, { cartService }) =>
+      cartService.add(params),
+  },
   Item: {
     price: (item, _, { pricesService }) => pricesService.getById(item.id),
     amountInCart: (item, _, { cartService }) =>

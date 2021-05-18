@@ -24,3 +24,12 @@ type Query {
   hello: String!
   items(paging: PagingParams!): PagedItems!
 }
+
+input AddToCartParams {
+    id: Int!
+    quantity: Int!
+}
+
+type Mutation {
+    addToCart(params: AddToCartParams): Boolean!
+}
