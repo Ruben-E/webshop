@@ -1,16 +1,102 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 
-<Meta title="Docs/Intro" />
+<Meta
+  title="Docs/Intro"
+  parameters={{
+    viewport: {
+      viewports: INITIAL_VIEWPORTS,
+      defaultViewport: "desktop",
+    },
+  }}
+/>
 
 # Webshop
 
 ## Resources
 
 ### Architecture
+
 - [Atomic design](https://bradfrost.com/blog/post/atomic-web-design/)
 
 ### Storybook
+
 - [Docs](https://storybook.js.org/docs/react/get-started/introduction)
 - [Intro to Storybook](https://storybook.js.org/tutorials/intro-to-storybook/)
 - [Design System for Developers](https://storybook.js.org/tutorials/design-systems-for-developers/)
 - [Addon-docs](https://storybook.js.org/docs/react/writing-docs/introduction)
+
+### React
+
+- [React](https://reactjs.org/)
+- [React Hooks](https://reactjs.org/docs/hooks-intro.html)
+
+### Nextjs
+
+- [NextJS](https://nextjs.org/)
+
+### GraphQL
+
+- [GraphQL](https://graphql.org/)
+- [Principled GraphQL](https://principledgraphql.com/)
+- [Apollo](https://www.apollographql.com/)
+
+## Application
+
+### UI
+
+The current application's UI is written in Storybook according to [Atomic design](https://bradfrost.com/blog/post/atomic-web-design/).
+All UI components are decoupled from state-management which means that during this workshop no html/css changes are necessary.
+
+UI components live in `src/components/**` and can be viewed independently in all their states in Storybook (left column).
+
+### NextJS
+
+The app is served by NextJS, which is a framework that makes server-side rendering and routing easier. NextJS creates
+pages based on directory structure and file names found in `src/pages`.
+
+- `src/pages/index` -> 'http://localhost:3000/'
+- `src/pages/cart` -> 'http://localhost:3000/cart'
+- `src/pages/categories/[category]` -> 'http://localhost:3000/category/electronics'
+- Etc..
+
+During this workshop `pages` will be migrated to GraphQL.
+
+### State-management
+
+This application is built without any state-management tools like Redux etc. State-management is done with `fetch`
+(web http impl) and React hooks. This logic will be gradually replaced with GraphQL.
+
+#### React hooks
+
+[Hooks](https://reactjs.org/docs/hooks-intro.html) provide a way to keep state and perform side-effects in Function components
+that are called on each render-cycle.
+
+##### Local state
+
+```tsx
+const [data, setData] = useState([]);
+```
+
+##### Side-effects
+
+Perform a call and update local state once:
+
+```tsx
+useEffect(() => {
+  fetch(ENDPOINT)
+    .then(res => res.json())
+    .then(data => setData(data);
+}, []) // <- Empty array only executes once.
+```
+
+Perform some logic each time data is updated:
+
+```tsx
+useEffect(() => {
+  if (data) {
+    // Do something with data
+  }
+}, [data]); // <- Effect triggers once and each time `data` changes.
+```
+
