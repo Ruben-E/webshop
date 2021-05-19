@@ -1,6 +1,6 @@
+import "../src/globals.css";
 import { defaultTheme } from "../src/theme/default";
 import { ThemeProvider } from "styled-components";
-import "../src/globals.css";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 
 export const parameters = {
@@ -24,7 +24,15 @@ export const parameters = {
   options: {
     storySort: {
       method: "alphabetical",
-        order: ["Docs", "Atoms", "Molecules", "Organisms", "Templates", "Pages"]
+      order: [
+        "Docs",
+        ["Intro", "Getting started", "Assignments overview"],
+        "Atoms",
+        "Molecules",
+        "Organisms",
+        "Templates",
+        "Pages",
+      ],
     },
   },
 };
