@@ -1,0 +1,194 @@
+import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
+
+# Assignment 3
+
+<Meta
+  title="Docs/Assignment 3"
+  parameters={{
+    viewport: {
+      viewports: INITIAL_VIEWPORTS,
+      defaultViewport: "desktop",
+    },
+  }}
+/>
+
+Starting point (if you don't want to continue on your own branch):
+
+```
+git checkout codemotion-assignment-3
+```
+
+## Intro
+
+It's time to move from the `playground` to an actual client. I've already installed and set up `Apollo Client` + code generation.
+
+[Apollo client commit](https://github.com/Rachnerd/webshop/commit/1e34518705d10bbcf6d170926fa4404ae719e4bc)
+
+If you take a look at `client.ts` there's quite some logic for [SSR support](https://www.apollographql.com/blog/building-a-next-js-app-with-apollo-client-slash-graphql/). If your client doesn't need a SSR, the function
+`createApolloClient` is the only thing you would define.
+
+From now on we will also start generating client-side runtime code as opposed to the compiletime types we've generated so far.
+
+When defining a query, a name should be given and potential variables should be passed to the query.
+
+```graphql
+query Example($value: String!) {
+  example(value: $value) {
+    content
+  }
+}
+```
+
+The code generator will create an Apollo query Hook based on the `.graphql` query file.
+
+```typescript
+const { data, error, loading } = useExampleQuery({ variables: { value: "" } });
+```
+
+Sometimes you need more control over the moment the query should execute. This is why the code generator also provides
+a `lazy` implementation:
+
+```typescript
+const [loadExample, { called, loading, data }] = useExampleLazyQuery({
+  variables: { value: "" },
+});
+
+useEffect(() => {
+  if (someCondition) {
+    loadExample();
+  }
+}, [someDep]);
+```
+
+## Assignments
+
+### 3.1 Home page items query
+
+- Update `graphql/queries/items.query.graphql` so it queries complete items. Make sure the query is called `Items` and
+  paging variables are not hard-coded.
+
+- Generate new code
+
+Now we're going to work on the Home page (`src/pages/index.ts`). There's quite some aggregation logic happening which we
+don't want to break. Since the items fetched from GraphQL are still used in other effects, it should be stored in local state
+so that non-graphql data can still update the items. If you're stuck check the hints or solution.
+
+- Implement `useItemsQuery` on the home page and remove `getItemsRequest` and its `effect`. Store the query data in local
+  state called `items` and make the rest compile again.
+
+Hints:
+
+- A way of turning GraphQL data into local state is by using useEffect and useState:
+
+```graphql
+query Example($value: String!) {
+  example(value: $value) {
+    content
+  }
+}
+```
+
+```tsx
+/**
+ * Keep state in the component
+ */
+const [example, setExample] = useState<string | undefined>();
+
+/**
+ * Execute GraphQL query
+ */
+const { data, error, loading } = useExampleQuery({
+  variables: { value: "123" },
+});
+
+/**
+ * Update 'example' local state each time the data of query changes
+ */
+useEffect(() => {
+  if (data !== undefined) {
+    setExample(data.example.content); // <- data has the same structure as its query
+  }
+}, [data]); // Trigger if data updates
+
+if (loading) {-
+  return <Spinner />;
+}
+if (error) {
+  return <Error>...</Error>;
+}
+
+if (example) {
+  return <>...</>;
+}
+```
+
+- If `HomePage` doesn't compile anymore it's because the data does not fit exactly. This can be fixed as follows:
+
+```tsx
+  return (
+    <HomePage
+      addToCart={addToCart}
+      itemsState={{
+        loading: itemsQuery.loading,
+        data: items,
+        error: itemsQuery.error,
+      }}
+    />
+```
+
+- BONUS: Fetch items server-side with NextJS.
+
+Hint:
+
+- [Apollo + NextJS](https://www.apollographql.com/blog/building-a-next-js-app-with-apollo-client-slash-graphql/) search
+  for `getStaticProps` which is a NextJS function that executes server-side.
+
+Solution:
+
+- [Commit](https://github.com/Rachnerd/webshop/commit/3bf7a191b0eadd3861feb5ed34b05a8d00267057)
+
+### 3.2 Remove aggregation logic in client
+
+The previous assignment was a temporary solution. Let's fix it properly by moving aggregation logic to GraphQL.
+
+Here's a list of things that have to be done to aggregate `cart` and `items` in GraphQL:
+
+- Add `amountInCart!` to `Item` type in GraphQL.
+- Create a `CartService` and add it to the `ServerContext`.
+- Implement a method `getQuantity` that fetches the cart from `http://localhost:3000/api/cart`, checks if the `item` is
+  in the `cart` and returns the `quantity` or `0`.
+- Avoid the N+1 problem with DataLoader (prevent 6 item quantities calling 6 carts).
+
+Here's the Cart call with type:
+
+```typescript
+  async getCart(): Promise<RemoteCartItem[]> {
+    return fetch(`http://localhost:3000/api/cart`).then((res) => res.json());
+  }
+```
+
+Open the [playground](http://localhost:4000) and execute the following query:
+
+```graphql
+{
+  items {
+    id
+    amountInCart
+  }
+}
+```
+
+Only 1 item should have more than 0 in cart (unless you have changed the cart client-side).
+
+Now that the server is set up, we can remove some code in the client.
+
+- Add `amountInCart` to the `items.query.graphql` -> Generate code.
+- In `Home` remove cart state, cart request and the `effect` that combines `cart` and `items`.
+
+Hints:
+
+- Previous assignments
+
+Solution:
+
+- [Commit](https://github.com/Rachnerd/webshop/commit/8fdf5605bc91a9f801f60c04b21fea6fccf1944d)
