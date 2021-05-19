@@ -1,0 +1,185 @@
+import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
+
+# Assignment 1
+
+<Meta
+  title="Docs/Assignment 1"
+  parameters={{
+    viewport: {
+      viewports: INITIAL_VIEWPORTS,
+      defaultViewport: "desktop",
+    },
+  }}
+/>
+
+Starting point:
+
+```
+git checkout codemotion-assignment-1
+```
+
+## Intro
+
+A GraphQL server is already added to the repository. This introduced new dependencies, run scripts, a code generation
+configuration and a server context containing the first API we'll call.
+
+Study [this commit](https://github.com/Rachnerd/webshop/commit/00ea27b994c80e162a73656185744f309f074737) to see what
+the setup of a minimal GraphQL server looks like.
+
+## Assignments
+
+### 1.1 First Query
+
+- In `graphql/schema.graphql` create a type called `Item` that represents the following data model, all fields should be mandatory (non-nullable).
+
+```typescript
+export interface RemoteItem {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+  category: string;
+}
+```
+
+Hint:
+
+- [GraphQL types and fields](https://graphql.org/learn/schema/#object-types-and-fields)
+
+A type on itself does not allow the client to query it.
+
+- Create a `Query` called `items` that returns a collection of `Item`. The returned collection should be non-nullable and
+  should only contain non-nullable values.
+
+Now that the schema is set up, run `npm run generate` to update the available TS interfaces and Server types.
+
+- Replace `any` in the ItemsService with the newly generated `GQLItem[]`.
+
+- Add an `items` Query resolver and call `itemsService` which is available via the server context.
+
+Hint:
+
+- [Apollo write query resolvers](https://www.apollographql.com/docs/tutorial/resolvers/)
+
+Open the [playground](http://localhost:4000) and test the following query:
+
+```graphql
+{
+  items {
+    id
+    title
+    description
+    image
+    category
+    price
+  }
+}
+```
+
+You should see a list of 20 items.
+
+Solution:
+
+- [Commit](https://github.com/Rachnerd/webshop/commit/e525c17aba9491ae0719741b7277bf57564c7422)
+
+### 1.2 Paging support
+
+A query that fetches all items from the server is very inefficient. We need to allow clients to limit the amount of results.
+
+The type we are looking for looks something like this:
+
+```typescript
+export interface Paged<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalResults: number;
+}
+```
+
+- Create a `type` called `PagedItems` that contains non-nullable paging fields and a `content` field with a non-nullable
+  `Item` collection.
+
+- Update the return `type` of the `items` query to non-nullable `PagedItems`.
+
+- Generate new TypeScript files and observe the errors in the GraphQL server.
+
+`/api/items` has paging support which can be easily enabled by removing the last `.then` block in the `ItemsService`.
+
+```typescript
+return fetch(`http://localhost:3000/api/items`)
+  .then((res) => res.json())
+  .then((data: Paged<Required<RemoteItem>>) => data);
+// .then((data) => data.content) <-- delete
+```
+
+- Fix the return type of the `get` method by replacing `GQLItem[]` with `GQLPagedItems`. Everything should compile again.
+
+Open the [playground](http://localhost:4000) and test the following query:
+
+```graphql
+{
+  items {
+    page
+    size
+    totalResults
+    content {
+      id
+    }
+  }
+}
+```
+
+You should see an object with paging information and 20 item ids.
+
+Now all that's left is allowing the client to pass paging information.
+
+- Create an `input` called `PagingParams` containing a non-nullable page and size.
+
+- Update the `items` query with a `input` called `paging` of non-nullable type `PagingParams`.
+
+- Generate new TypeScript files and observe that this time there should be no errors.
+
+`/api/items` supports query parameters as follows:
+
+```typescript
+return fetch(`http://localhost:3000/api/items?page=${page}&size=${size}`)
+  .then((res) => res.json())
+  .then((data: Paged<Required<RemoteItem>>) => data);
+```
+
+- Add paging support to the `ItemsService` using the appropriate generated `GQL` types.
+
+- Pass the `paging` input of the `items` query resolver to the `ItemsService`.
+
+Hint:
+
+- [GraphQL input types](https://graphql.org/learn/schema/#input-types)
+- [Apollo write query resolvers](https://www.apollographql.com/docs/tutorial/resolvers/)
+
+Open the [playground](http://localhost:4000) and test the following query:
+
+```graphql
+{
+  items(paging: { page: 0, size: 6 }) {
+    page
+    size
+    totalResults
+    content {
+      id
+    }
+  }
+}
+```
+
+You should see an object with paging information and 6 item ids.
+
+Solution:
+
+- [Commit](https://github.com/Rachnerd/webshop/commit/e55c1331241f4fc3abb0c74cebb394a90310d59b)
+
+Interesting resources:
+
+- [Pagination GraphQL](https://graphql.org/learn/pagination/)
+- [Pagination Apollo](https://www.apollographql.com/docs/react/pagination/core-api/)
