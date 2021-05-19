@@ -1,0 +1,75 @@
+import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
+
+# Assignment 4
+
+<Meta
+  title="Docs/Assignment 4"
+  parameters={{
+    viewport: {
+      viewports: INITIAL_VIEWPORTS,
+      defaultViewport: "desktop",
+    },
+  }}
+/>
+
+Starting point (if you don't want to continue on your own branch):
+
+```
+git checkout codemotion-assignment-4
+```
+
+## Intro
+
+No additional changes are made since the last [commit](https://github.com/Rachnerd/webshop/commit/8fdf5605bc91a9f801f60c04b21fea6fccf1944d) of the previous assignment
+
+So far we've only requests data, so let's start sending data.
+
+## Assignments
+
+### 4.1 Add to cart mutation
+
+- Create a `mutation` called `addToCart` which returns a non-nullable boolean.
+- Create an `input` called `AddToCartParams` that contains a non-nullable id and quantity.
+
+Hint:
+
+- [Mutations](https://graphql.org/learn/queries/#mutations)
+
+Here's the post to cart request for the `CartService`.
+
+```typescript
+return fetch(`http://localhost:3000/api/cart`, {
+  method: "POST",
+  body: JSON.stringify({ id, quantity }),
+  headers: {
+    "Content-Type": "application/json",
+  },
+}).then(() => true);
+```
+
+- Implement the `addToCart` mutation resolver.
+- Create `src/graphql/mutation/add-to-cart.mutation.graphql` and generate the mutation.
+- In `Home` replace `addItemToCartRequest` with `addToCartMutation`.
+
+Solution:
+
+- [Commit](https://github.com/Rachnerd/webshop/commit/9ff3713375a4c706aeed63a4bc708d73552ee4b6)
+
+### 4.2 Updating local cache
+
+We almost got rid of all aggregation logic on the Home page. The only thing left to do is to update the cache after a successful
+mutation.
+
+- Remove the local state update after a successful add to cart.
+- Implement the `update` method inside the `mutation` options by writing a fragment update to the cache.
+- Cleanup by removing the local items state and fully rely on `useItemsQuery`.
+
+Hints:
+
+- [Update cache after mutation](https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-after-a-mutation)
+- [writeFragment](https://www.apollographql.com/docs/react/caching/cache-interaction/#writefragment) (example states `client`
+  but it can also be performed on cache).
+
+Solution:
+
+- [Commit](https://github.com/Rachnerd/webshop/commit/e2006897f1ec87ca7aec39d72f3f1c88c4ccfa06)
