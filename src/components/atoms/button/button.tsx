@@ -5,7 +5,7 @@ export interface ButtonProps {
 }
 
 export const Button = styled.button<ButtonProps>`
-  padding: 15px;
+  padding: 13px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
