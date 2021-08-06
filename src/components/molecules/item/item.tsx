@@ -11,6 +11,7 @@ export const Item: React.FunctionComponent<ItemProps> = ({ item }) => (
   <ItemContainer>
     <LeftColumn>
       <ItemImage src={item.image} alt={"item"} />
+      Test
       <Rating value={3.5} />
     </LeftColumn>
     <RightColumn>
